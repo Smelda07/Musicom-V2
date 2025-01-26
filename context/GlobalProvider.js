@@ -21,11 +21,9 @@ const GlobalProvider = ({ children }) => {
           setIsLogged(false);
           setUser(null);
         }
-
       })
       .catch((error) => {
         console.log(error);
-        console.log("de");
       })
       .finally(() => {
         setLoading(false);

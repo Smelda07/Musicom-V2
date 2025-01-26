@@ -5,28 +5,35 @@ import { signOut } from "../../lib/appwrite.js"
 import { Redirect, router } from 'expo-router'
 import { Alert } from 'react-native';
 
+import { SafeAreaView } from 'react-native-safe-area-context'
+
 import { useGlobalContext } from "../../context/GlobalProvider";
 
 const Home = () => {
 
-  const { loading, isLogged } = useGlobalContext();
+  const { user, setUser, setIsLogged } = useGlobalContext();
 
-  if (!loading && !isLogged) return router.replace("sign-in")
+  const signOutSubmit = () => {
+    setUser(null)
+    setIsLogged(false)
+    signOut()
+    router.push("/sign-in")
+  }
+
 
   return (
-    <View>
-        <CustomButton
-              title="Odhlásit se"
-              handlePress={() => {
-                signOut()
-                router.push("/sign-in")
-              }}
-              containerStyles="mt-10"
-            />
-            <Text>
-              Blablbabl
-            </Text>
-    </View>
+    <SafeAreaView>
+      <View>
+          <CustomButton
+                title="Odhlásit se"
+                handlePress={() => signOutSubmit()}
+                containerStyles="mt-10"
+              />
+              <Text>
+                {user?.username}
+              </Text>
+      </View>
+    </SafeAreaView>
   )
 }
 

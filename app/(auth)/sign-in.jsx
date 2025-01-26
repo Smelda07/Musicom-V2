@@ -5,16 +5,15 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import FormField from '../../components/FormField';
 import CustomButton from '../../components/CustomButton';
 import BackArrow from '../../assets/icons/auth-icons/BackArrow.svg';
-import { signIn, getAccount } from '@/lib/appwrite';
+import { signIn, getAccount, getCurrentUser } from '@/lib/appwrite';
 import { Alert } from 'react-native';
+
+import { Redirect } from 'expo-router';
 
 import { useGlobalContext } from "../../context/GlobalProvider";
 
 const SignIn = () => {
-
-    const { loading, isLogged } = useGlobalContext();
-  
-    if (!loading && isLogged) return <Redirect href="/home" />;
+  const { setUser, setIsLogged } = useGlobalContext();
 
   const [form, setForm] = useState({
     email: '',
@@ -37,13 +36,15 @@ const SignIn = () => {
 
     try {
       await signIn(form.email, form.password);
+
+
       const result = await getCurrentUser();
       setUser(result);
       setIsLogged(true);
 
-      console.log(result);
-      Alert.alert("Success", "User signed in successfully");
-      router.replace("/home");
+      console.log("User signed in successfully");
+
+      <Redirect href="/homes"/>;
       
     } catch (error) {
       console.log("error sign-in:49")
