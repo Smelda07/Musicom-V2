@@ -1,0 +1,38 @@
+{
+  "expo": {
+    "name": "Musicom",
+    "newArchEnabled": true,
+    "slug": "Musicom",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "scheme": "myapp",
+    "userInterfaceStyle": "automatic",
+    "splash": {
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "package": "com.musicom.app"
+    },
+    "android": {
+      "package": "com.musicom.app",
+      "adaptiveIcon": {
+        "backgroundColor": "#ffffff"
+      }
+    },
+    "web": {
+      "package": "com.musicom.app",
+      "bundler": "metro",
+      "output": "static"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-build-properties",
+      "expo-font"
+    ],
+    "experiments": {
+      "typedRoutes": true
+    }
+  }
+}
