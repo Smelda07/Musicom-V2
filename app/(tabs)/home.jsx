@@ -23,6 +23,9 @@ const Home = () => {
               }}
               containerStyles="mt-10"
             />
+            <Text>
+              Blablbabl
+            </Text>
     </View>
   )
 }
