@@ -65,7 +65,7 @@ const OnBoardingLayout = ({ children, totalSteps = 5 }) => {
           <Text className="text-white text-xl font-semibold text-center mt-6">{question}</Text>  
         </View>
 
-        <View className="h-[2px] bg-[#2D2D2D] w-full mt-10 rounded-full"></View>
+        <View className="h-[1px] bg-[#1D1D1D] w-full mt-10 rounded-full"></View>
 
         {/* Obsah podstránky */}
         <View className="flex-1">    

@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, Text, View, ScrollView } from 'react-native'
 import React from 'react'
 import CustomButton from '@/components/CustomButton'
 import { signOut } from "../../lib/appwrite.js"
@@ -22,17 +22,19 @@ const Home = () => {
 
 
   return (
-    <SafeAreaView>
-      <View>
+    <SafeAreaView className="bg-secondary h-full"> {/*bg-primary?*/}
+      <ScrollView>
+        <View>
           <CustomButton
-                title="Odhlásit se"
-                handlePress={() => signOutSubmit()}
-                containerStyles="mt-10"
-              />
-              <Text>
-                {user?.username}
-              </Text>
-      </View>
+              title="Odhlásit se"
+              handlePress={() => signOutSubmit()}
+              containerStyles="mt-10"
+            />
+          <Text>
+            {user?.username}
+          </Text>
+        </View>
+      </ScrollView>
     </SafeAreaView>
   )
 }

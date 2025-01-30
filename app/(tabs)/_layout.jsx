@@ -4,10 +4,11 @@ import { icons } from '../../constants/icons';
 import React from 'react';
 
 import { useGlobalContext } from "../../context/GlobalProvider";
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const TabIcon = ({ icon, color, name, focused }) => {
   return (
-    <View className="items-center justify-center gap-1">
+    <View className="items-center justify-center gap-2 w-16 pt-8">
       <Image
         source={icon}
         resizeMode="contain"
@@ -39,10 +40,10 @@ const TabsLayout = () => {
             tabBarActiveTintColor: '#00D2A1',
             tabBarInactiveTintColor: '#ffffff',
             tabBarStyle: {
-              backgroundColor: '#0E0E0E',
+              backgroundColor: '#060606',
               borderTopWidth: 1,
-              borderTopColor: '#ffffff',
-              height: 84,
+              borderColor: '#151515',
+              height: 72,
             }
           }}
         >

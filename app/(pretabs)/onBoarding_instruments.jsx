@@ -1,16 +1,44 @@
-import { View, Text, ScrollView, TouchableOpacity } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, TextInput } from 'react-native';
 import { router } from 'expo-router';
 import NextPageButton from '../../components/NextPageButton';
 import NextPageArrow from '../../assets/icons/pretabs-icons/NextPageArrow';
 
+const instruments = [
+  "Electric guitar", "Piano", "Drums", "Violin", "Bass guitar",
+  "Accoustic guitar", "Flutte", "Vocal"
+];
 
 const OnBoardingInstruments = () => {
 
   return (
     <>
       <ScrollView className="bg-primary">
-        <View>
-
+        <View className="mx-4">
+          <Text className="text-lg text-white mt-6">
+            The most common
+          </Text>
+          <View className="flex-row flex-wrap gap-x-2 gap-y-3 mt-5">
+            {instruments.map((instruments, index) => (
+              <TouchableOpacity 
+                key={index} 
+                className="bg-[#00836D] rounded-full px-4 py-2 w-auto"
+              >
+                <Text className="text-white font-semibold text-center text-base">
+                  {instruments}
+                </Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+          <Text className="text-lg text-white mt-8">
+            Something else?
+          </Text>
+          <View className="mt-4">
+            <TextInput
+              className="border text-md border-gray-500 rounded-md px-4 py-3 text-white"
+              placeholder="Type an instrument..."
+              placeholderTextColor="#888"
+            />
+          </View>
         </View>
       </ScrollView>
       <View className="bg-primary flex justify-center py-10">
