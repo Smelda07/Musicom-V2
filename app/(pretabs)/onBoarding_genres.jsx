@@ -1,4 +1,4 @@
-import { View, Text, ScrollView, TouchableOpacity } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, TextInput } from 'react-native';
 import { router } from 'expo-router';
 import NextPageButton from '../../components/NextPageButton';
 import NextPageArrow from '../../assets/icons/pretabs-icons/NextPageArrow';
@@ -32,6 +32,13 @@ const OnBoardingGenres = () => {
           <Text className="text-lg text-white mt-8">
             Something else?
           </Text>
+          <View className="mt-4">
+            <TextInput
+              className="border text-md border-gray-500 rounded-md px-4 py-3 text-white"
+              placeholder="Type an instrument..."
+              placeholderTextColor="#888"
+            />
+          </View>
         </View>
       </ScrollView>
       
