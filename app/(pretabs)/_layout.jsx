@@ -3,6 +3,8 @@ import { Text, View, TouchableOpacity } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import BackArrow from '../../assets/icons/auth-icons/BackArrow.svg';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import NextPageButton from '../../components/NextPageButton';
+import NextPageArrow from '../../assets/icons/pretabs-icons/NextPageArrow';
 
 const OnBoardingLayout = ({ children, totalSteps = 5 }) => {
   const router = useRouter();
@@ -27,6 +29,23 @@ const OnBoardingLayout = ({ children, totalSteps = 5 }) => {
   };
 
   const question = questions[currentStep];
+
+  const isFirstPage = currentStep === 1;
+  const isLastPage = currentStep === totalSteps;
+
+  const goToNextPage = () => {
+    const nextStep = Object.keys(stepsMapping).find(
+      (key) => stepsMapping[key] === currentStep + 1
+    );
+    if (nextStep) router.push(nextStep);
+  };
+
+  const goToLastPage = () => {
+    const lastStep = Object.keys(stepsMapping).find(
+      (key) => stepsMapping[key] === currentStep - 1
+    );
+    if (lastStep) router.push(lastStep);
+  };
 
   return (
     <SafeAreaView>
@@ -73,12 +92,30 @@ const OnBoardingLayout = ({ children, totalSteps = 5 }) => {
           {children}
         </View>
 
-        <StatusBar backgroundColor="#060606"/>
+        {/* Navigační tlačítka */}
+        <View className={`bg-primary flex py-10 flex-row ${isFirstPage ? "justify-end" : "justify-between"}`}>
+          {!isFirstPage && (
+            <NextPageButton
+              title="Last page"
+              handlePress={goToLastPage}
+              containerStyles="w-48"
+              Icon={<NextPageArrow width={16} height={16} style={{ transform: [{ rotate: '180deg' }] }} />}
+              iconPosition="left"
+            />
+          )}
+          <NextPageButton
+            title="Next page"
+            handlePress={goToNextPage}
+            containerStyles="w-48"
+            Icon={<NextPageArrow width={16} height={16} />}
+            iconPosition="right"
+          />
+        </View>
 
+        <StatusBar backgroundColor="#060606"/>
       </View>
     </SafeAreaView>
   );
 };
-
 
 export default OnBoardingLayout;
