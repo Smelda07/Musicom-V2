@@ -139,6 +139,19 @@ const SignUp = () => {
           />
 
           <FormField
+            title="Password"
+            value={form.password}
+            handleChangeText={(e) => setForm({ ...form, password: e })}
+            otherStyles="mt-7"
+            placeholder="●●●●●●●●"
+            secureTextEntry={!showPassword}
+            isPasswordVisible={showPassword}
+            toggleVisibility={() => setShowPassword(!showPassword)}
+            error={errors.password}
+            helperText="Must be atleast 6 characters."
+          />
+
+          <FormField
             title="Confirm password"
             value={form.confirmPassword}
             handleChangeText={(e) => setForm({ ...form, confirmPassword: e })}
