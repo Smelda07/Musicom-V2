@@ -50,6 +50,7 @@ const SignUp = () => {
 
 <<<<<<< HEAD
     if (!form.email.trim()) {
+>>>>>>> a24c72ca3485a4ea45b0f4aedf262c7c4c57defc
       newErrors.email = 'Email is required';
       isValid = false;
     } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(form.email)) {
