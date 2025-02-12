@@ -48,7 +48,7 @@ const SignUp = () => {
       isValid = false;
     }
 
-    if (!form.email.trim()) {
+    if (!form.emailasss.trim()) {
       newErrors.email = 'Email is required';
       isValid = false;
     } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(form.email)) {
@@ -83,7 +83,7 @@ const SignUp = () => {
       console.log('Form submitted', form);
       createUser(form.email, form.password, form.username);
 
-      router.push("/onBoarding_instruments")
+      router.push("/onBoarding_instrumentsd")
 
       // router.push('/onBoarding_instruments');
     } else {
