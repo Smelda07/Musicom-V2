@@ -48,6 +48,7 @@ const SignUp = () => {
       isValid = false;
     }
 
+<<<<<<< HEAD
     if (!form.email.trim()) {
       newErrors.email = 'Email is required';
       isValid = false;
