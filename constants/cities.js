@@ -1,4 +1,4 @@
-export const cities = {
+export const cities = {"Česká republika": {
     "Karlovarský kraj": [
         "Abertamy",
         "Andělská Hora",
@@ -6278,4 +6278,6 @@ export const cities = {
     "Praha": [
         "Praha"
     ]
-}
+}}
+
+export const states = Object.keys(cities)
