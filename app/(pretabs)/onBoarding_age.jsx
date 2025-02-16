@@ -6,7 +6,7 @@ const OnBoardingAge = () => {
     <>
       <ScrollView className="bg-primary">
         <View>
-
+          
         </View>
       </ScrollView>
     </>

@@ -83,7 +83,7 @@ const SignUp = () => {
       console.log('Form submitted', form);
       createUser(form.email, form.password, form.username);
 
-      router.push("/onBoarding_instrumentsd")
+      router.push("/onBoarding_instruments")
 
       // router.push('/onBoarding_instruments');
     } else {

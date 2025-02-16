@@ -6,7 +6,7 @@ const OnBoardingGender = () => {
     <>
       <ScrollView className="bg-primary">
         <View>
-
+          
         </View>
       </ScrollView>
     </>
