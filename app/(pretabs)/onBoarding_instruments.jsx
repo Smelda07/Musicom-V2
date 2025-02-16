@@ -1,33 +1,21 @@
-import { useState, useRef } from 'react';
+import { useRef, useState } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, TextInput, Pressable, Keyboard, Alert } from 'react-native';
 import { instruments_list } from "../../constants/instruments.js";
+import { useSurveyStore } from "../../context/useSurveyStore";
 
 const MAX_SELECTION = 3; // Maximální počet vybraných nástrojů
 
 const OnBoardingInstruments = () => {
   const [searchText, setSearchText] = useState('');
-  const [chosenInstruments, setChosenInstruments] = useState([]);
   const [showDropdown, setShowDropdown] = useState(false);
-
   const inputRef = useRef(null); // Reference na TextInput
+
+  const { chosenInstruments, toggleInstrument } = useSurveyStore(); // Použití globálního stavu
 
   const commonInstruments = [
     "Electric Guitar", "Piano", "Drums", "Violin", "Bass Guitar",
     "Acoustic Guitar", "Flute", "Vocal"
   ];
-
-  // Přidání nebo odebrání vybraného nástroje
-  const toggleInstrument = (instrument) => {
-    if (chosenInstruments.includes(instrument)) {
-      setChosenInstruments(chosenInstruments.filter(item => item !== instrument));
-    } else {
-      if (chosenInstruments.length >= MAX_SELECTION) {
-        Alert.alert("Limit Reached", `You can select up to ${MAX_SELECTION} instruments.`);
-        return;
-      }
-      setChosenInstruments([...chosenInstruments, instrument]);
-    }
-  };
 
   // Filtrování nástrojů podle hledaného textu
   const filteredInstruments = instruments_list
@@ -43,7 +31,7 @@ const OnBoardingInstruments = () => {
       }} 
       className="flex-1 bg-primary"
     >
-      <ScrollView className="bg-primary">
+      <View className="bg-primary">
         <View className="mx-4">
           <Text className="text-lg text-white mt-8">Find your Instrument</Text>
           <View className="mt-4 relative">
@@ -84,6 +72,10 @@ const OnBoardingInstruments = () => {
                     key={index} 
                     className="p-3 border-b border-gray-600"
                     onPress={() => {
+                      if (chosenInstruments.length >= MAX_SELECTION) {
+                        Alert.alert("Limit Reached", `You can select up to ${MAX_SELECTION} instruments.`);
+                        return;
+                      }
                       toggleInstrument(instrument);
                       setSearchText('');
                       setShowDropdown(false);
@@ -107,9 +99,12 @@ const OnBoardingInstruments = () => {
                   key={index}
                   className={`rounded-full px-4 py-2 w-auto ${isSelected ? "bg-gray-600 opacity-50" : "bg-[#00836D]"}`}
                   onPress={() => {
-                    if (!isSelected) toggleInstrument(instrument);
+                    if (chosenInstruments.length >= MAX_SELECTION) {
+                      Alert.alert("Limit Reached", `You can select up to ${MAX_SELECTION} instruments.`);
+                      return;
+                    }
+                    toggleInstrument(instrument);
                   }}
-                  disabled={isSelected} // Zakáže výběr, pokud už je nástroj vybrán
                 >
                   <Text className="text-white font-semibold text-center text-base">
                     {instrument}
@@ -138,7 +133,7 @@ const OnBoardingInstruments = () => {
             ))}
           </View>
         </View>
-      </ScrollView>
+      </View>
     </Pressable>
   );
 };

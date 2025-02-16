@@ -6,7 +6,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import NextPageButton from '../../components/NextPageButton';
 import NextPageArrow from '../../assets/icons/pretabs-icons/NextPageArrow';
 
-const OnBoardingLayout = ({ children, totalSteps = 5 }) => {
+const OnBoardingLayout = ({ children, totalSteps = 6 }) => {
   const router = useRouter();
   const pathname = usePathname();
 
@@ -16,6 +16,7 @@ const OnBoardingLayout = ({ children, totalSteps = 5 }) => {
     '/onBoarding_locality': 3,
     '/onBoarding_gender': 4,
     '/onBoarding_age': 5,
+    '/summaryScreen': 6,
   };
 
   const currentStep = stepsMapping[pathname] || 1;
@@ -45,6 +46,10 @@ const OnBoardingLayout = ({ children, totalSteps = 5 }) => {
       (key) => stepsMapping[key] === currentStep - 1
     );
     if (lastStep) router.push(lastStep);
+  };
+
+  const submitSurvey = () => {
+    console.log("Submitting survey..."); // Tady pak zavoláš Appwrite API
   };
 
   return (
@@ -103,13 +108,23 @@ const OnBoardingLayout = ({ children, totalSteps = 5 }) => {
               iconPosition="left"
             />
           )}
-          <NextPageButton
-            title="Next page"
-            handlePress={goToNextPage}
-            containerStyles="w-48"
-            Icon={<NextPageArrow width={16} height={16} />}
-            iconPosition="right"
-          />
+
+          {isLastPage ? (
+            <TouchableOpacity 
+              onPress={submitSurvey} 
+              className="w-48 bg-blue-500 p-3 rounded-lg"
+            >
+              <Text className="text-white text-center">Submit</Text>
+            </TouchableOpacity>
+          ) : (
+            <NextPageButton
+              title="Next page"
+              handlePress={goToNextPage}
+              containerStyles="w-48"
+              Icon={<NextPageArrow width={16} height={16} />}
+              iconPosition="right"
+            />
+          )}
         </View>
 
         <StatusBar backgroundColor="#060606"/>
