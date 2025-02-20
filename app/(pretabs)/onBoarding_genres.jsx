@@ -31,7 +31,7 @@ const OnBoardingGenres = () => {
       }} 
       className="flex-1 bg-primary"
     >
-      <ScrollView className="bg-primary">
+      <View className="bg-primary">
         <View className="mx-4">
           <Text className="text-lg text-white mt-8">Find your Genre</Text>
           <View className="mt-4 relative">
@@ -131,7 +131,7 @@ const OnBoardingGenres = () => {
             ))}
           </View>
         </View>
-      </ScrollView>
+      </View>
     </Pressable>
   );
 };

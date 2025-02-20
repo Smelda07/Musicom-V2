@@ -1,10 +1,11 @@
 import { useRouter, usePathname, Stack } from 'expo-router';
-import { Text, View, TouchableOpacity } from 'react-native';
+import { Text, View, TouchableOpacity, Alert } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import BackArrow from '../../assets/icons/auth-icons/BackArrow.svg';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import NextPageButton from '../../components/NextPageButton';
 import NextPageArrow from '../../assets/icons/pretabs-icons/NextPageArrow';
+import { useSurveyStore } from "../../context/useSurveyStore"; // Import store
 
 const OnBoardingLayout = ({ children, totalSteps = 6 }) => {
   const router = useRouter();
@@ -27,6 +28,7 @@ const OnBoardingLayout = ({ children, totalSteps = 6 }) => {
     3: 'Where are you located?',
     4: 'Are you male or female?',
     5: 'How old are you?',
+    6: 'Recapitulation of the questionnaire',
   };
 
   const question = questions[currentStep];
@@ -34,7 +36,33 @@ const OnBoardingLayout = ({ children, totalSteps = 6 }) => {
   const isFirstPage = currentStep === 1;
   const isLastPage = currentStep === totalSteps;
 
+  const { chosenInstruments, chosenGenres, chosenGender, birthYear, locality } = useSurveyStore();
+
+  const isStepCompleted = () => {
+    switch (currentStep) {
+      case 1:
+        return chosenInstruments.length > 0;
+      case 2:
+        return chosenGenres.length > 0;
+      case 3:
+        return locality.country && locality.state && locality.city;
+      case 4:
+        return chosenGender;
+      case 5:
+        let actualDate = new Date()
+        return birthYear > actualDate.getFullYear()-100 && (actualDate.getFullYear() - birthYear) > 13;
+      default:
+        return true;
+    }
+  };
+
+  // Přechod na další stránku s validací
   const goToNextPage = () => {
+    if (!isStepCompleted()) {
+      Alert.alert("Incomplete", "Please fill in all required fields before proceeding.");
+      return;
+    }
+
     const nextStep = Object.keys(stepsMapping).find(
       (key) => stepsMapping[key] === currentStep + 1
     );
@@ -49,7 +77,8 @@ const OnBoardingLayout = ({ children, totalSteps = 6 }) => {
   };
 
   const submitSurvey = () => {
-    console.log("Submitting survey..."); // Tady pak zavoláš Appwrite API
+    console.log("Submitting survey..."); // Tady zavoláš Appwrite API
+    /*submitToAppwrite*/
   };
 
   return (
@@ -111,7 +140,7 @@ const OnBoardingLayout = ({ children, totalSteps = 6 }) => {
 
           {isLastPage ? (
             <TouchableOpacity 
-              onPress={submitSurvey} 
+              onPress={submitSurvey}
               className="w-48 bg-blue-500 p-3 rounded-lg"
             >
               <Text className="text-white text-center">Submit</Text>

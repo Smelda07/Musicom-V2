@@ -3,12 +3,18 @@ import { create } from 'zustand';
 export const useSurveyStore = create((set) => ({
   chosenInstruments: [],
   chosenGenres: [],
-  chosenOtherData: {}, // Pokud máš další sekce dotazníku
+  chosenGender: null,
+  birthYear: "",
+  locality: { country: "", state: "", city: "" },
 
   setChosenInstruments: (instruments) => set({ chosenInstruments: instruments }),
   setChosenGenres: (genres) => set({ chosenGenres: genres }),
-  
-  // Přidání/odebrání nástroje
+  setGender: (gender) => set({ chosenGender: gender }),
+  setBirthYear: (year) => set({ birthYear: year }),
+
+  setLocality: (countryKey, countryLabel, stateKey, stateLabel, cityKey, cityLabel) =>
+    set({ locality: { country: { key: countryKey, label: countryLabel }, state: { key: stateKey, label: stateLabel }, city: { key: cityKey, label: cityLabel } } }),
+
   toggleInstrument: (instrument) =>
     set((state) => ({
       chosenInstruments: state.chosenInstruments.includes(instrument)
@@ -16,7 +22,6 @@ export const useSurveyStore = create((set) => ({
         : [...state.chosenInstruments, instrument],
     })),
 
-  // Přidání/odebrání žánru
   toggleGenre: (genre) =>
     set((state) => ({
       chosenGenres: state.chosenGenres.includes(genre)
@@ -24,12 +29,12 @@ export const useSurveyStore = create((set) => ({
         : [...state.chosenGenres, genre],
     })),
 
-  // Uložení dalších odpovědí (např. preferovaný styl hraní apod.)
-  setOtherData: (key, value) =>
-    set((state) => ({
-      chosenOtherData: { ...state.chosenOtherData, [key]: value },
-    })),
-
-  // Reset dat po odeslání
-  resetSurvey: () => set({ chosenInstruments: [], chosenGenres: [], chosenOtherData: {} }),
+  resetSurvey: () =>
+    set({
+      chosenInstruments: [],
+      chosenGenres: [],
+      chosenGender: null,
+      birthYear: "",
+      locality: { country: "", state: "", city: "" }, // Reset locality
+    }),
 }));
