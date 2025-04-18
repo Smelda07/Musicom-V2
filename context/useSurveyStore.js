@@ -35,6 +35,6 @@ export const useSurveyStore = create((set) => ({
       chosenGenres: [],
       chosenGender: null,
       birthYear: "",
-      locality: { country: "", state: "", city: "" }, // Reset locality
+      locality: { country: "", state: "", city: "" },
     }),
 }));
