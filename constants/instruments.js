@@ -19,7 +19,7 @@ export const instruments_list = [
 	"Ukulele",
 	"Mandolin",
 	"Accordion",
-	"Vocals",
+	"Vocal",
 	"DJ Controller",
 	"Turntables",
 	"Sampler",

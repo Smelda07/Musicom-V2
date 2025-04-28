@@ -2,11 +2,15 @@ import { StyleSheet, Text, View, ScrollView, Image, TouchableOpacity } from 'rea
 import React, { useState } from 'react'
 import * as ImagePicker from 'expo-image-picker'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import { Share } from 'react-native'
+import { TextInput } from 'react-native'
+
 import Facebook from '../../assets/icons/auth-icons/facebook.svg'
 import EditIcon from '../../assets/icons/tabs-icons/edit.svg'
 import PhotoIcon from '../../assets/icons/tabs-icons/photo.svg'
-import { Share } from 'react-native'
-import { TextInput } from 'react-native'
+import LocalityIcon from '../../assets/icons/tabs-icons/profile/Locality.svg'
+import AgeIcon from '../../assets/icons/tabs-icons/profile/Age.svg'
+import GenreIcon from '../../assets/icons/tabs-icons/profile/OtherInstrument.svg'
 
 const Profile = () => {
   const [backgroundImage, setBackgroundImage] = useState(null)
@@ -84,7 +88,7 @@ const Profile = () => {
         {/* Profile Picture */}
         <TouchableOpacity
           onPress={handlePickProfileImage}
-          className="flex justify-center items-center mx-auto bg-white w-24 h-24 rounded-full -mt-12 overflow-hidden"
+          className="flex justify-center items-center mx-auto bg-white w-28 h-28 rounded-full -mt-12 overflow-hidden"
         >
           {profileImage ? (
             <Image
@@ -181,7 +185,7 @@ const Profile = () => {
     
           <Text className="text-center font-regular text-xl text-white mt-6">Music instrument</Text> 
           <View className="justify-center items-center bg-[#171717] w-full rounded-3xl h-16 mt-3">
-            <View className="absolute left-4 top-1/2 -translate-y-1/2 flex-row gap-2">
+            <View className="absolute left-6 top-1/2 -translate-y-1/2 flex-row gap-2">
               <Facebook width={30} height={30} />
               <Facebook width={30} height={30} />
             </View>
@@ -193,8 +197,8 @@ const Profile = () => {
 
           <Text className="text-center font-regular text-xl text-white mt-6">Locality</Text> 
           <View className="justify-center items-center bg-[#171717] w-full rounded-3xl h-16 mt-3">
-            <View className="absolute left-4 top-1/2 -translate-y-1/2">
-              <Facebook width={30} height={30} />
+            <View className="absolute left-6 top-1/2 -translate-y-1/2">
+              <LocalityIcon width={24} height={24} />
             </View>
             <View className="absolute right-0 top-1/2 -translate-y-1/2 mr-8">
               <EditIcon width={18} height={18} />
@@ -204,8 +208,8 @@ const Profile = () => {
 
           <Text className="text-center font-regular text-xl text-white mt-6">Age</Text> 
           <View className="justify-center items-center bg-[#171717] w-full rounded-3xl h-16 mt-3">
-            <View className="absolute left-4 top-1/2 -translate-y-1/2">
-              <Facebook width={30} height={30} />
+            <View className="absolute left-6 top-1/2 -translate-y-1/2">
+              <AgeIcon width={24} height={24} />
             </View>
             <View className="absolute right-0 top-1/2 -translate-y-1/2 mr-8">
               <EditIcon width={18} height={18} />
@@ -215,8 +219,8 @@ const Profile = () => {
 
           <Text className="text-center font-regular text-xl text-white mt-6">Music genres</Text> 
           <View className="justify-center items-center bg-[#171717] w-full rounded-3xl h-16 mt-3 mb-24">
-            <View className="absolute left-4 top-1/2 -translate-y-1/2">
-              <Facebook width={30} height={30} />
+            <View className="absolute left-6 top-1/2 -translate-y-1/2">
+              <GenreIcon width={24} height={24} />
             </View>
             <View className="absolute right-0 top-1/2 -translate-y-1/2 mr-8">
               <EditIcon width={18} height={18} />
