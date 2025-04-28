@@ -15,5 +15,5 @@
     ".expo/types/**/*.ts",
     "expo-env.d.ts",
     "nativewind-env.d.ts"
-, "app/index.jsx", "app/(tabs)/_layout.jsx", "app/(tabs)/_layout.jsx", "components/CustomButton.jsx", "app/_layout.jsx", "app/(auth)/sign-in.jsx", "app/(auth)/sign-up.jsx", "app/(pretabs)/_layout.jsx", "app/(tabs)/home.jsx"  ]
+, "app/index.jsx", "app/(tabs)/_layout.jsx", "app/(tabs)/_layout.jsx", "components/CustomButton.jsx", "app/_layout.jsx", "app/(auth)/sign-in.jsx", "app/(auth)/sign-up.jsx", "app/(pretabs)/_layout.jsx", "app/(tabs)/home.jsx", "app/(tabs)/profile.jsx"  ]
 }
