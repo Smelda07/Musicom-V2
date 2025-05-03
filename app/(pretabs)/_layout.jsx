@@ -139,7 +139,7 @@ const OnBoardingLayout = ({ children, totalSteps = 6 }) => {
           )}
 
           {isLastPage ? (
-            <TouchableOpacity 
+            <TouchableOpacity
               onPress={submitSurvey}
               className="w-48 bg-blue-500 p-3 rounded-lg"
             >

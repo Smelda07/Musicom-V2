@@ -10,6 +10,8 @@ import { createUser } from '../../lib/appwrite';
 
 const SignUp = () => {
   const [form, setForm] = useState({
+    firstname: '',
+    lastname: '',
     username: '',
     email: '',
     password: '',
@@ -24,6 +26,8 @@ const SignUp = () => {
 
   // Stavy pro chyby
   const [errors, setErrors] = useState({
+    firstname: '',
+    lastname: '',
     username: '',
     email: '',
     password: '',
@@ -33,6 +37,8 @@ const SignUp = () => {
   const validateForm = () => {
     let isValid = true;
     const newErrors = {
+      firstname: '',
+      lastname: '',
       username: '',
       email: '',
       password: '',
@@ -40,6 +46,16 @@ const SignUp = () => {
     };
 
     // Kontrola prázdných polí
+    if (!form.firstname.trim()) {
+      newErrors.firstname = 'First name is required';
+      isValid = false;
+    }
+
+    if (!form.lastname.trim()) {
+      newErrors.lastname = 'Last name is required';
+      isValid = false;
+    }
+
     if (!form.username.trim()) {
       newErrors.username = 'Username is required';
       isValid = false;
@@ -59,7 +75,7 @@ const SignUp = () => {
     if (!form.password) {
       newErrors.password = 'Password is required';
       isValid = false;
-    } else if (form.password.length < 6) {
+    } else if (form.password.length < 8) {
       newErrors.password = 'Atleast 8 characters are required.';
       isValid = false;
     }
@@ -81,7 +97,7 @@ const SignUp = () => {
     if (validateForm()) {
       setisSubmitting(true);
       console.log('Form submitted', form);
-      createUser(form.email, form.password, form.username);
+      createUser(form.email, form.password, form.username, form.firstname, form.lastname);
 
       router.push("/onBoarding_instruments")
 
@@ -107,11 +123,29 @@ const SignUp = () => {
         </Text>
         <View className="w-full justify-center min-h-[60vh] px-8 my-6">
           <FormField
+            title="First name"
+            value={form.firstname}
+            handleChangeText={(e) => setForm({ ...form, firstname: e })}
+            otherStyles="mt-7"
+            placeholder="Corey"
+            error={errors.firstname}
+          />
+
+          <FormField
+            title="Last name"
+            value={form.lastname}
+            handleChangeText={(e) => setForm({ ...form, lastname: e })}
+            otherStyles="mt-7"
+            placeholder="Patton"
+            error={errors.lastname}
+          />
+
+          <FormField
             title="Username"
             value={form.username}
             handleChangeText={(e) => setForm({ ...form, username: e })}
             otherStyles="mt-7"
-            placeholder="Corey123"
+            placeholder="@Bombarder28"
             error={errors.username}
           />
 
