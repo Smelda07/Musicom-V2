@@ -83,14 +83,11 @@ const OnBoardingLayout = ({ children, totalSteps = 6 }) => {
 
   const submitSurvey = () => {
     console.log("Submitting survey..."); // Tady zavoláš Appwrite API
-<<<<<<< Updated upstream
     console.log(chosenInstruments)
     updateUserProfile({
       
     })
-=======
     router.push(1);
->>>>>>> Stashed changes
     /*submitToAppwrite*/
   };
 
