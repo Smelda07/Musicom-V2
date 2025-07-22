@@ -29,7 +29,7 @@ const OnBoardingLayout = ({ children, totalSteps = 6 }) => {
 
   const questions = {
     1: 'What instruments do you play?',
-    2: 'What genre do you play?',
+    2: 'What genre do you prefer?',
     3: 'Where are you located?',
     4: 'Are you male or female?',
     5: 'How old are you?',
@@ -83,10 +83,14 @@ const OnBoardingLayout = ({ children, totalSteps = 6 }) => {
 
   const submitSurvey = () => {
     console.log("Submitting survey..."); // Tady zavoláš Appwrite API
+<<<<<<< Updated upstream
     console.log(chosenInstruments)
     updateUserProfile({
       
     })
+=======
+    router.push(1);
+>>>>>>> Stashed changes
     /*submitToAppwrite*/
   };
 
