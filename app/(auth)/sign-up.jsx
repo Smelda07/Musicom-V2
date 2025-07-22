@@ -1,4 +1,4 @@
-import { Text, View, ScrollView, TouchableOpacity } from 'react-native';
+import { Text, View, ScrollView, TouchableOpacity, Alert } from 'react-native';
 import React, { useState } from 'react';
 import { router } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -10,20 +10,22 @@ import { createUser, signIn } from '../../lib/appwrite';
 
 const SignUp = () => {
   const [form, setForm] = useState({
+    firstname: '',
+    lastname: '',
     username: '',
     email: '',
     password: '',
     confirmPassword: '',
   });
 
-  const [isSubmitting, setisSubmitting] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Stav pro viditelnost hesel
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-  // Stavy pro chyby
   const [errors, setErrors] = useState({
+    firstname: '',
+    lastname: '',
     username: '',
     email: '',
     password: '',
@@ -33,34 +35,45 @@ const SignUp = () => {
   const validateForm = () => {
     let isValid = true;
     const newErrors = {
+      firstname: '',
+      lastname: '',
       username: '',
       email: '',
       password: '',
       confirmPassword: '',
     };
 
-    // Kontrola prázdných polí
+    if (!form.firstname.trim()) {
+      newErrors.firstname = 'First name is required';
+      isValid = false;
+    }
+
+    if (!form.lastname.trim()) {
+      newErrors.lastname = 'Last name is required';
+      isValid = false;
+    }
+
     if (!form.username.trim()) {
       newErrors.username = 'Username is required';
       isValid = false;
     } else if (form.username.trim().length < 3) {
-      newErrors.username = 'Atleast 3 characters are required.';
+      newErrors.username = 'At least 3 characters are required.';
       isValid = false;
     }
 
     if (!form.email.trim()) {
       newErrors.email = 'Email is required';
       isValid = false;
-    } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(form.email)) {
-      newErrors.email = 'Invalid email address'
-      isValid = false
+    } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(form.email)) {
+      newErrors.email = 'Invalid email address';
+      isValid = false;
     }
 
     if (!form.password) {
       newErrors.password = 'Password is required';
       isValid = false;
-    } else if (form.password.length < 6) {
-      newErrors.password = 'Atleast 8 characters are required.';
+    } else if (form.password.length < 8) {
+      newErrors.password = 'At least 8 characters are required.';
       isValid = false;
     }
 
@@ -68,7 +81,7 @@ const SignUp = () => {
       newErrors.confirmPassword = 'Confirm password is required';
       isValid = false;
     } else if (form.password !== form.confirmPassword) {
-      newErrors.confirmPassword = 'Passwords do not matcdh';
+      newErrors.confirmPassword = 'Passwords do not match';
       isValid = false;
     }
 
@@ -76,22 +89,35 @@ const SignUp = () => {
     return isValid;
   };
 
-  // Funkce pro odeslání formuláře
-  const submit = () => {
+  const submit = async () => {
     if (validateForm()) {
       setisSubmitting(true);
       console.log('Form submitted', form);
       createUser(form.email, form.password, form.username);
       signIn(form.email, form.password)
+      setIsSubmitting(true);
+      try {
+        const newUser = await createUser(
+          form.email,
+          form.password,
+          form.username,
+          form.firstname,
+          form.lastname
+        );
 
-      router.push("/onBoarding_instruments")
+        console.log('✅ User successfully created:', newUser);
 
-      // router.push('/onBoarding_instruments');
+        router.push('/onBoarding_instruments');
+      } catch (error) {
+        console.error('❌ Registration error:', error);
+        Alert.alert('Registration error', error.message || 'Unknown error');
+      } finally {
+        setIsSubmitting(false);
+      }
     } else {
-      console.log(errors);
+      console.log('❌ Form validation failed:', errors);
     }
-  };  
-  
+  };
 
   return (
     <SafeAreaView className="bg-primary h-full">
@@ -103,16 +129,38 @@ const SignUp = () => {
         >
           <BackArrow width={30} height={30} />
         </TouchableOpacity>
-        <Text className="text-3xl text-[#3CFFDF] text-roboto font-medium text-center mt-[10vh]">
-          Musicom
-        </Text>
+
+        <View className="items-center mt-[10vh]">
+          <Text className="text-3xl text-[#3CFFDF] text-roboto font-medium">
+            Musicom
+          </Text>
+        </View>
+
         <View className="w-full justify-center min-h-[60vh] px-8 my-6">
+          <FormField
+            title="First name"
+            value={form.firstname}
+            handleChangeText={(e) => setForm({ ...form, firstname: e })}
+            otherStyles="mt-7"
+            placeholder="Corey"
+            error={errors.firstname}
+          />
+
+          <FormField
+            title="Last name"
+            value={form.lastname}
+            handleChangeText={(e) => setForm({ ...form, lastname: e })}
+            otherStyles="mt-7"
+            placeholder="Patton"
+            error={errors.lastname}
+          />
+
           <FormField
             title="Username"
             value={form.username}
             handleChangeText={(e) => setForm({ ...form, username: e })}
             otherStyles="mt-7"
-            placeholder="Corey123"
+            placeholder="@Bombarder28"
             error={errors.username}
           />
 
@@ -136,7 +184,7 @@ const SignUp = () => {
             isPasswordVisible={showPassword}
             toggleVisibility={() => setShowPassword(!showPassword)}
             error={errors.password}
-            helperText="Must be atleast 6 characters."
+            helperText="Must be at least 8 characters."
           />
 
           <FormField
@@ -159,12 +207,15 @@ const SignUp = () => {
           />
 
           <View className="justify-center pt-5 flex-row gap-2">
-            <TouchableOpacity 
-                activeOpacity={0.5} 
-                onPress={() => router.push('/sign-in')}
-              >
-              <Text className="text-[#979797] text-lg font-medium">
-                Already have an Account?
+            <Text className="text-[#979797] text-lg font-medium">
+              Already have an account?{' '}
+            </Text>
+            <TouchableOpacity
+              activeOpacity={0.5}
+              onPress={() => router.push('/sign-in')}
+            >
+              <Text className="text-[#3CFFDF] text-lg font-semibold">
+                Sign in
               </Text>
             </TouchableOpacity>
           </View>

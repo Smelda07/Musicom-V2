@@ -1,9 +1,10 @@
 import { StyleSheet, Text, View, ScrollView, Image, TouchableOpacity } from 'react-native'
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react'
 import * as ImagePicker from 'expo-image-picker'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { Share } from 'react-native'
-import { TextInput } from 'react-native'
+import { Share, TextInput } from 'react-native'
+
+import { getUserProfile } from '../../lib/appwrite'
 
 import Facebook from '../../assets/icons/auth-icons/facebook.svg'
 import EditIcon from '../../assets/icons/tabs-icons/edit.svg'
@@ -28,6 +29,25 @@ const Profile = () => {
     };
     fetchProfile();
   }, []);
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const profile = await getUserProfile()
+        if (profile) {
+          setBio(profile.bio)
+          setInstruments(profile.instruments)
+          setGenres(profile.genres)
+          setLocation(profile.location)
+          setAge(profile.age)
+        }
+      } catch (err) {
+        console.error('Failed to load user profile:', err)
+      }
+    }
+
+    fetchUserData()
+  }, [])
 
   const handleShareProfile = async () => {
     try {
@@ -80,16 +100,9 @@ const Profile = () => {
       <ScrollView>
         <View className="w-full h-60 relative overflow-hidden bg-[#191919]">
           {backgroundImage && (
-            <Image
-              source={{ uri: backgroundImage }}
-              style={StyleSheet.absoluteFill}
-              resizeMode="cover"
-            />
+            <Image source={{ uri: backgroundImage }} style={StyleSheet.absoluteFill} resizeMode="cover" />
           )}
-          <TouchableOpacity
-            onPress={handlePickImage}
-            className="absolute right-0 top-6 mr-8 z-10"
-          >
+          <TouchableOpacity onPress={handlePickImage} className="absolute right-0 top-6 mr-8 z-10">
             <EditIcon width={18} height={18} />
           </TouchableOpacity>
         </View>
@@ -99,11 +112,7 @@ const Profile = () => {
           className="flex justify-center items-center mx-auto bg-white w-28 h-28 rounded-full -mt-12 overflow-hidden"
         >
           {profileImage ? (
-            <Image
-              source={{ uri: profileImage }}
-              className="w-full h-full"
-              resizeMode="cover"
-            />
+            <Image source={{ uri: profileImage }} className="w-full h-full" resizeMode="cover" />
           ) : (
             <PhotoIcon className="w-16 h-16" />
           )}
@@ -157,20 +166,13 @@ const Profile = () => {
           <View className={`w-full rounded-xl min-h-[64px] mt-3 px-8 py-4 relative ${isEditingBio ? 'bg-[#2A2A2A]' : 'bg-[#171717]'}`}>
             {!isEditingBio && bio.trim() === '' && (
               <View className="absolute inset-0 justify-center items-center">
-                <Text className="text-[#575757] text-lg font-regular text-center">
-                  Something about you
-                </Text>
+                <Text className="text-[#575757] text-lg font-regular text-center">Something about you</Text>
               </View>
             )}
-
             {isEditingBio ? (
               <TextInput
                 value={bio}
-                onChangeText={(text) => {
-                  if (text.length <= 100) {
-                    setBio(text);
-                  }
-                }}
+                onChangeText={(text) => text.length <= 100 && setBio(text)}
                 onBlur={() => setIsEditingBio(false)}
                 className="text-[#D4D4D4] text-lg font-regular"
                 placeholder="Something about you"
@@ -179,19 +181,14 @@ const Profile = () => {
                 style={{ textAlignVertical: 'top' }}
               />
             ) : (
-              bio.trim() !== '' && (
-                <Text className="text-[#D4D4D4] text-lg font-regular flex-wrap">{bio}</Text>
-              )
+              bio.trim() !== '' && <Text className="text-[#D4D4D4] text-lg font-regular flex-wrap">{bio}</Text>
             )}
-
-            <TouchableOpacity
-              onPress={() => setIsEditingBio(true)}
-              className="absolute right-0 top-1/2 mr-4"
-            >
+            <TouchableOpacity onPress={() => setIsEditingBio(true)} className="absolute right-0 top-1/2 mr-4">
               <EditIcon width={18} height={18} />
             </TouchableOpacity>
           </View>
 
+          {/* Instruments */}
           <Text className="text-center font-regular text-xl text-white mt-6">Music instrument</Text>
           <View className="justify-center items-center bg-[#171717] w-full rounded-3xl h-16 mt-3">
             <View className="absolute left-6 top-1/2 -translate-y-1/2 flex-row gap-2">
@@ -201,9 +198,10 @@ const Profile = () => {
             <View className="absolute right-0 top-1/2 -translate-y-1/2 mr-8">
               <EditIcon width={18} height={18} />
             </View>
-            <Text className="text-[#D4D4D4] text-lg font-regular">Vocal, Bass</Text>
+            <Text className="text-[#D4D4D4] text-lg font-regular">{instruments.join(', ')}</Text>
           </View>
 
+          {/* Location */}
           <Text className="text-center font-regular text-xl text-white mt-6">Locality</Text>
           <View className="justify-center items-center bg-[#171717] w-full rounded-3xl h-16 mt-3">
             <View className="absolute left-6 top-1/2 -translate-y-1/2">
@@ -212,9 +210,10 @@ const Profile = () => {
             <View className="absolute right-0 top-1/2 -translate-y-1/2 mr-8">
               <EditIcon width={18} height={18} />
             </View>
-            <Text className="text-[#D4D4D4] text-lg font-regular">Czech republic, Brno</Text>
+            <Text className="text-[#D4D4D4] text-lg font-regular">{location}</Text>
           </View>
 
+          {/* Age */}
           <Text className="text-center font-regular text-xl text-white mt-6">Age</Text>
           <View className="justify-center items-center bg-[#171717] w-full rounded-3xl h-16 mt-3">
             <View className="absolute left-6 top-1/2 -translate-y-1/2">
@@ -223,9 +222,10 @@ const Profile = () => {
             <View className="absolute right-0 top-1/2 -translate-y-1/2 mr-8">
               <EditIcon width={18} height={18} />
             </View>
-            <Text className="text-[#D4D4D4] text-lg font-regular">41 Years</Text>
+            <Text className="text-[#D4D4D4] text-lg font-regular">{age} Years</Text>
           </View>
 
+          {/* Genres */}
           <Text className="text-center font-regular text-xl text-white mt-6">Music genres</Text>
           <View className="justify-center items-center bg-[#171717] w-full rounded-3xl h-16 mt-3 mb-24">
             <View className="absolute left-6 top-1/2 -translate-y-1/2">
@@ -234,7 +234,7 @@ const Profile = () => {
             <View className="absolute right-0 top-1/2 -translate-y-1/2 mr-8">
               <EditIcon width={18} height={18} />
             </View>
-            <Text className="text-[#D4D4D4] text-lg font-regular">Rock, Heavy metal</Text>
+            <Text className="text-[#D4D4D4] text-lg font-regular">{genres.join(', ')}</Text>
           </View>
         </View>
       </ScrollView>
@@ -242,4 +242,4 @@ const Profile = () => {
   );
 };
 
-export default Profile;
+export default Profile

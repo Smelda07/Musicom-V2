@@ -9,8 +9,12 @@
     "userInterfaceStyle": "automatic",
     "splash": {
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#000000"
     },
+    "androidStatusBar": {
+      "backgroundColor": "#000000"
+    },
+    "backgroundColor":"#000000",
     "ios": {
       "supportsTablet": true,
       "package": "com.musicom.app"
@@ -18,7 +22,7 @@
     "android": {
       "package": "com.musicom.app",
       "adaptiveIcon": {
-        "backgroundColor": "#ffffff"
+        "backgroundColor": "#000000"
       }
     },
     "web": {
@@ -29,7 +33,8 @@
     "plugins": [
       "expo-router",
       "expo-build-properties",
-      "expo-font"
+      "expo-font",
+      "expo-web-browser"
     ],
     "experiments": {
       "typedRoutes": true
