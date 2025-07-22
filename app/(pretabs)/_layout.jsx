@@ -6,6 +6,11 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import NextPageButton from '../../components/NextPageButton';
 import NextPageArrow from '../../assets/icons/pretabs-icons/NextPageArrow';
 import { useSurveyStore } from "../../context/useSurveyStore"; // Import store
+import { updateUserProfile } from '../../lib/appwrite';
+import { Platform } from 'react-native';
+import { StyleSheet } from 'nativewind';
+
+const Wrapper = Platform.OS === 'web' ? View : SafeAreaView;
 
 const OnBoardingLayout = ({ children, totalSteps = 6 }) => {
   const router = useRouter();
@@ -78,86 +83,100 @@ const OnBoardingLayout = ({ children, totalSteps = 6 }) => {
 
   const submitSurvey = () => {
     console.log("Submitting survey..."); // Tady zavoláš Appwrite API
+    console.log(chosenInstruments)
+    updateUserProfile({
+      
+    })
     /*submitToAppwrite*/
   };
 
+  const styles = StyleSheet.create({
+    outer: {
+      flex: 1,
+    },
+    inner: {
+      flex: 1
+    }
+  });
+  
+
   return (
-    <SafeAreaView>
-      <View className="bg-primary h-full px-7">
-        {/* Header */}
-        <View>
-          <TouchableOpacity
-            activeOpacity={0.5}
-            className="pt-8" 
-            onPress={() => router.push('/sign-in')}
-          >
-            <BackArrow width={30} height={30} />
-          </TouchableOpacity>
-        </View>
-
-        {/* Step Counter */}
-        <View className="flex items-center px-4 pt-2">
-          <Text className="text-md font-semibold text-white">
-            {currentStep}/{totalSteps} steps
-          </Text>
-        </View>
-
-        <View className="h-1.5 bg-[#2D2D2D] rounded-full mt-4">
-          <View
-            style={{
-              width: `${(currentStep / totalSteps) * 100}%`,
-              backgroundColor: '#7D7D7D',
-              height: '100%',
-              borderRadius: 5,
-            }}
-          />
-        </View>
-
-        <View>
-          <Text className="text-3xl text-[#3CFFDF] text-roboto font-medium text-center mt-12">Musicom</Text>
-          <Text className="text-white text-xl font-semibold text-center mt-6">{question}</Text>  
-        </View>
-
-        <View className="h-[1px] bg-[#1D1D1D] w-full mt-10 rounded-full"></View>
-
-        {/* Obsah podstránky */}
-        <View className="flex-1">    
-          <Stack screenOptions={{ headerShown: false }} />
-          {children}
-        </View>
-
-        {/* Navigační tlačítka */}
-        <View className={`bg-primary flex py-10 flex-row ${isFirstPage ? "justify-end" : "justify-between"}`}>
-          {!isFirstPage && (
-            <NextPageButton
-              title="Last page"
-              handlePress={goToLastPage}
-              containerStyles="w-48"
-              Icon={<NextPageArrow width={16} height={16} style={{ transform: [{ rotate: '180deg' }] }} />}
-              iconPosition="left"
-            />
-          )}
-
-          {isLastPage ? (
-            <TouchableOpacity 
-              onPress={submitSurvey}
-              className="w-48 bg-blue-500 p-3 rounded-lg"
+    <SafeAreaView style={styles.outer}>
+        <View className="bg-primary h-full px-7" style={styles.inner}>
+          {/* Header */}
+          <View>
+            <TouchableOpacity
+              activeOpacity={0.5}
+              className="pt-8" 
+              onPress={() => router.push('/sign-in')}
             >
-              <Text className="text-white text-center">Submit</Text>
+              <BackArrow width={30} height={30} />
             </TouchableOpacity>
-          ) : (
-            <NextPageButton
-              title="Next page"
-              handlePress={goToNextPage}
-              containerStyles="w-48"
-              Icon={<NextPageArrow width={16} height={16} />}
-              iconPosition="right"
-            />
-          )}
-        </View>
+          </View>
 
-        <StatusBar backgroundColor="#060606"/>
-      </View>
+          {/* Step Counter */}
+          <View className="flex items-center px-4 pt-2">
+            <Text className="text-md font-semibold text-white">
+              {currentStep}/{totalSteps} steps
+            </Text>
+          </View>
+
+          <View className="h-1.5 bg-[#2D2D2D] rounded-full mt-4">
+            <View
+              style={{
+                width: `${(currentStep / totalSteps) * 100}%`,
+                backgroundColor: '#7D7D7D',
+                height: '100%',
+                borderRadius: 5,
+              }}
+            />
+          </View>
+
+          <View>
+            <Text className="text-3xl text-[#3CFFDF] text-roboto font-medium text-center mt-12">Musicom</Text>
+            <Text className="text-white text-xl font-semibold text-center mt-6">{question}</Text>  
+          </View>
+
+          <View className="h-[1px] bg-[#1D1D1D] w-full mt-10 rounded-full"></View>
+
+          {/* Obsah podstránky */}
+          <View className="flex-1">    
+            <Stack screenOptions={{ headerShown: false }} />
+            {children}
+          </View>
+
+          {/* Navigační tlačítka */}
+          <View className={`bg-primary flex py-10 flex-row ${isFirstPage ? "justify-end" : "justify-between"}`}>
+            {!isFirstPage && (
+              <NextPageButton
+                title="Last page"
+                handlePress={goToLastPage}
+                containerStyles="w-48"
+                Icon={<NextPageArrow width={16} height={16} style={{ transform: [{ rotate: '180deg' }] }} />}
+                iconPosition="left"
+              />
+            )}
+
+            {isLastPage ? (
+              <TouchableOpacity 
+                onPress={submitSurvey}
+                className="w-48 bg-blue-500 p-3 rounded-lg"
+              >
+                <Text className="text-white text-center">Submit</Text>
+              </TouchableOpacity>
+            ) : (
+              <NextPageButton
+                title="Next page"
+                handlePress={goToNextPage}
+                containerStyles="w-48"
+                Icon={<NextPageArrow width={16} height={16} />}
+                iconPosition="right"
+              />
+            )}
+          </View>
+
+          <StatusBar backgroundColor="#060606"/>
+        </View>
     </SafeAreaView>
   );
 };

@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View, ScrollView, Image, TouchableOpacity } from 'react-native'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react';
 import * as ImagePicker from 'expo-image-picker'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { Share } from 'react-native'
@@ -12,32 +12,42 @@ import LocalityIcon from '../../assets/icons/tabs-icons/profile/Locality.svg'
 import AgeIcon from '../../assets/icons/tabs-icons/profile/Age.svg'
 import GenreIcon from '../../assets/icons/tabs-icons/profile/OtherInstrument.svg'
 
+import { getUserProfile } from '../../lib/appwrite'
+
 const Profile = () => {
-  const [backgroundImage, setBackgroundImage] = useState(null)
-  const [profileImage, setProfileImage] = useState(null)
+  const [backgroundImage, setBackgroundImage] = useState(null);
+  const [profileImage, setProfileImage] = useState(null);
   const [bio, setBio] = useState('');
-  const [isEditingBio, setIsEditingBio] = useState(false)
+  const [isEditingBio, setIsEditingBio] = useState(false);
+  const [profile, setProfile] = useState(null);
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      const userData = await getUserProfile();
+      if (userData) setProfile(userData);
+    };
+    fetchProfile();
+  }, []);
 
   const handleShareProfile = async () => {
     try {
       const result = await Share.share({
-        message: 'Check out my profile on Musicom! 🎶\nhttps://musicom.com/user/melody_maker', /*Nastavit správnou adresu*/
-      })
-  
+        message: `Check out my profile on Musicom! 🎶\nhttps://musicom.com/user/${profile?.username || 'user'}`,
+      });
+
       if (result.action === Share.sharedAction) {
         if (result.activityType) {
-          console.log('Sdíleno přes:', result.activityType)
+          console.log('Sdíleno přes:', result.activityType);
         } else {
-          console.log('Profil byl sdílen.')
+          console.log('Profil byl sdílen.');
         }
       } else if (result.action === Share.dismissedAction) {
-        console.log('Sdílení bylo zrušeno.')
+        console.log('Sdílení bylo zrušeno.');
       }
     } catch (error) {
-      console.error('Chyba při sdílení profilu:', error.message)
+      console.error('Chyba při sdílení profilu:', error.message);
     }
-  }
-  
+  };
 
   const handlePickImage = async () => {
     const result = await ImagePicker.launchImageLibraryAsync({
@@ -45,12 +55,12 @@ const Profile = () => {
       allowsEditing: true,
       aspect: [16, 9],
       quality: 1,
-    })
+    });
 
     if (!result.canceled && result.assets.length > 0) {
-      setBackgroundImage(result.assets[0].uri)
+      setBackgroundImage(result.assets[0].uri);
     }
-  }
+  };
 
   const handlePickProfileImage = async () => {
     const result = await ImagePicker.launchImageLibraryAsync({
@@ -58,17 +68,16 @@ const Profile = () => {
       allowsEditing: true,
       aspect: [1, 1],
       quality: 1,
-    })
+    });
 
     if (!result.canceled && result.assets.length > 0) {
-      setProfileImage(result.assets[0].uri)
+      setProfileImage(result.assets[0].uri);
     }
-  }
+  };
 
   return (
     <SafeAreaView className="bg-secondary h-full">
       <ScrollView>
-        {/* Background Image */}
         <View className="w-full h-60 relative overflow-hidden bg-[#191919]">
           {backgroundImage && (
             <Image
@@ -85,7 +94,6 @@ const Profile = () => {
           </TouchableOpacity>
         </View>
 
-        {/* Profile Picture */}
         <TouchableOpacity
           onPress={handlePickProfileImage}
           className="flex justify-center items-center mx-auto bg-white w-28 h-28 rounded-full -mt-12 overflow-hidden"
@@ -100,16 +108,20 @@ const Profile = () => {
             <PhotoIcon className="w-16 h-16" />
           )}
         </TouchableOpacity>
+
         <View className="flex-row justify-center items-center mt-4">
-          <Text className="font-bold text-2xl text-white text-center">Melody Composer</Text>
+          <Text className="font-bold text-2xl text-white text-center">
+            {profile?.username || 'Loading...'}
+          </Text>
           <View className="absolute right-0 top-1/2 -translate-y-1/2 mr-8">
             <EditIcon width={18} height={18} />
           </View>
         </View>
 
-        <Text className="font-regular text-lg text-white text-center mt-2">@melody_maker</Text>
+        <Text className="font-regular text-lg text-white text-center mt-2">
+          @{profile?.username || '...'}
+        </Text>
 
-        {/*buttons*/}
         <View className="flex-row gap-4 justify-center">
           <TouchableOpacity
             onPress={handleShareProfile}
@@ -123,7 +135,6 @@ const Profile = () => {
           </View>
         </View>
 
-        {/*Statistiky (časem)*/}
         <View className="hidden flex-row gap-16 justify-center mt-5">
           <View>
             <Text className="text-2xl text-white font-semibold text-center">150</Text>
@@ -141,9 +152,8 @@ const Profile = () => {
 
         <View className="flex items-center w-full mx-8 bg-[#191919] h-[1px] mt-8"></View>
 
-        {/*portfolio muzikanta*/}
         <View className="mx-8">
-        <Text className="text-center font-regular text-xl text-white mt-6">Users bio</Text>
+          <Text className="text-center font-regular text-xl text-white mt-6">Users bio</Text>
           <View className={`w-full rounded-xl min-h-[64px] mt-3 px-8 py-4 relative ${isEditingBio ? 'bg-[#2A2A2A]' : 'bg-[#171717]'}`}>
             {!isEditingBio && bio.trim() === '' && (
               <View className="absolute inset-0 justify-center items-center">
@@ -157,7 +167,7 @@ const Profile = () => {
               <TextInput
                 value={bio}
                 onChangeText={(text) => {
-                  if (text.length <= 100) { // Limit bio to 100 characters
+                  if (text.length <= 100) {
                     setBio(text);
                   }
                 }}
@@ -182,8 +192,7 @@ const Profile = () => {
             </TouchableOpacity>
           </View>
 
-    
-          <Text className="text-center font-regular text-xl text-white mt-6">Music instrument</Text> 
+          <Text className="text-center font-regular text-xl text-white mt-6">Music instrument</Text>
           <View className="justify-center items-center bg-[#171717] w-full rounded-3xl h-16 mt-3">
             <View className="absolute left-6 top-1/2 -translate-y-1/2 flex-row gap-2">
               <Facebook width={30} height={30} />
@@ -195,7 +204,7 @@ const Profile = () => {
             <Text className="text-[#D4D4D4] text-lg font-regular">Vocal, Bass</Text>
           </View>
 
-          <Text className="text-center font-regular text-xl text-white mt-6">Locality</Text> 
+          <Text className="text-center font-regular text-xl text-white mt-6">Locality</Text>
           <View className="justify-center items-center bg-[#171717] w-full rounded-3xl h-16 mt-3">
             <View className="absolute left-6 top-1/2 -translate-y-1/2">
               <LocalityIcon width={24} height={24} />
@@ -206,7 +215,7 @@ const Profile = () => {
             <Text className="text-[#D4D4D4] text-lg font-regular">Czech republic, Brno</Text>
           </View>
 
-          <Text className="text-center font-regular text-xl text-white mt-6">Age</Text> 
+          <Text className="text-center font-regular text-xl text-white mt-6">Age</Text>
           <View className="justify-center items-center bg-[#171717] w-full rounded-3xl h-16 mt-3">
             <View className="absolute left-6 top-1/2 -translate-y-1/2">
               <AgeIcon width={24} height={24} />
@@ -217,7 +226,7 @@ const Profile = () => {
             <Text className="text-[#D4D4D4] text-lg font-regular">41 Years</Text>
           </View>
 
-          <Text className="text-center font-regular text-xl text-white mt-6">Music genres</Text> 
+          <Text className="text-center font-regular text-xl text-white mt-6">Music genres</Text>
           <View className="justify-center items-center bg-[#171717] w-full rounded-3xl h-16 mt-3 mb-24">
             <View className="absolute left-6 top-1/2 -translate-y-1/2">
               <GenreIcon width={24} height={24} />
@@ -227,14 +236,10 @@ const Profile = () => {
             </View>
             <Text className="text-[#D4D4D4] text-lg font-regular">Rock, Heavy metal</Text>
           </View>
-
-
         </View>
       </ScrollView>
     </SafeAreaView>
-  )
-}
+  );
+};
 
-export default Profile
-
-const styles = StyleSheet.create({})
+export default Profile;

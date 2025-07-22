@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, TextInput, Pressable, Keyboard, Alert } from 'react-native';
-import { instruments_list } from "../../constants/instruments.js";
+import { getAllInstruments, getCommonInstruments } from "../../constants/instruments.js";
 import { useSurveyStore } from "../../context/useSurveyStore";
 
 const MAX_SELECTION = 3; // Maximální počet vybraných nástrojů
@@ -12,16 +12,16 @@ const OnBoardingInstruments = () => {
 
   const { chosenInstruments, toggleInstrument } = useSurveyStore(); // Použití globálního stavu
 
-  const commonInstruments = [
-    "Electric Guitar", "Piano", "Drums", "Violin", "Bass Guitar",
-    "Acoustic Guitar", "Flute", "Vocal"
-  ];
+  const commonInstruments = getCommonInstruments(true);
+
+  console.log(getAllInstruments())
 
   // Filtrování nástrojů podle hledaného textu
-  const filteredInstruments = instruments_list
-    .filter(instrument => instrument.toLowerCase().startsWith(searchText.toLowerCase()))
-    .filter(instrument => !chosenInstruments.includes(instrument)) // Nezobrazovat již vybrané nástroje
-    .sort((a, b) => a.localeCompare(b));
+  const filteredInstruments = Object.values(getAllInstruments()) // Převede objekt na pole hodnot
+  .filter(instrument => instrument.toLowerCase().startsWith(searchText.toLowerCase())) // Filtrování podle názvu
+  .filter(instrument => !chosenInstruments.includes(instrument)) // Nezobrazovat již vybrané nástroje
+  .sort((a, b) => a.localeCompare(b)); // Seřazení podle názvu
+
 
   return (
     <Pressable 
@@ -92,7 +92,7 @@ const OnBoardingInstruments = () => {
           {/* The most common instruments */}
           <Text className="text-lg text-white mt-6">The Most Common</Text>
           <View className="flex-row flex-wrap gap-x-2 gap-y-3 mt-5">
-            {commonInstruments.map((instrument, index) => {
+            {Object.values(commonInstruments).map((instrument, index) => {
               const isSelected = chosenInstruments.includes(instrument);
               return (
                 <TouchableOpacity

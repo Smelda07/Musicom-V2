@@ -6,7 +6,7 @@ import FormField from '../../components/FormField';
 import CustomButton from '../../components/CustomButton';
 import BackArrow from '../../assets/icons/auth-icons/BackArrow.svg';
 
-import { createUser } from '../../lib/appwrite';
+import { createUser, signIn } from '../../lib/appwrite';
 
 const SignUp = () => {
   const [form, setForm] = useState({
@@ -82,6 +82,7 @@ const SignUp = () => {
       setisSubmitting(true);
       console.log('Form submitted', form);
       createUser(form.email, form.password, form.username);
+      signIn(form.email, form.password)
 
       router.push("/onBoarding_instruments")
 
