@@ -4,8 +4,6 @@ import * as ImagePicker from 'expo-image-picker'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { Share, TextInput } from 'react-native'
 
-import { getUserProfile } from '../../lib/appwrite'
-
 import Facebook from '../../assets/icons/auth-icons/facebook.svg'
 import EditIcon from '../../assets/icons/tabs-icons/edit.svg'
 import PhotoIcon from '../../assets/icons/tabs-icons/photo.svg'

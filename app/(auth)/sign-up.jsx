@@ -91,11 +91,12 @@ const SignUp = () => {
 
   const submit = async () => {
     if (validateForm()) {
-      setisSubmitting(true);
+      setIsSubmitting(true);
       console.log('Form submitted', form);
+      console.log(form.email, form.username)
       createUser(form.email, form.password, form.username);
       signIn(form.email, form.password)
-      setIsSubmitting(true);
+      
       try {
         const newUser = await createUser(
           form.email,
