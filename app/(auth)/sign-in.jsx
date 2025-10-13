@@ -1,60 +1,59 @@
-import { Text, View, ScrollView, TouchableOpacity } from 'react-native';
+import { Text, View, ScrollView, TouchableOpacity, Alert } from 'react-native';
 import React, { useState } from 'react';
 import { router } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import FormField from '../../components/FormField';
 import CustomButton from '../../components/CustomButton';
 import BackArrow from '../../assets/icons/auth-icons/BackArrow.svg';
-import { signIn, getAccount, getCurrentUser } from '@/lib/appwrite';
-import { Alert } from 'react-native';
-
-import { Redirect } from 'expo-router';
-
+import { signIn, getCurrentUser } from '@/lib/appwrite';
 import { useGlobalContext } from "../../context/GlobalProvider";
 
 const SignIn = () => {
-  const { setUser, setIsLogged } = useGlobalContext();
+  const { setUser } = useGlobalContext();
 
   const [form, setForm] = useState({
     email: '',
     password: '',
-  })
+  });
 
-  const [isSubmitting, setSubmitting] = useState(false)
-
-  // Správa viditelnosti hesel
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const submit = async () => {
-    if (form.email === "" || form.password === "") {
-      Alert.alert("Error", "Please fill in all fields");
+    if (!form.email || !form.password) {
+      return Alert.alert("Error", "Please fill in all fields");
     }
 
-
-    setSubmitting(true);
+    setIsSubmitting(true);
 
     try {
+      // Přihlášení uživatele
       await signIn(form.email, form.password);
 
+      // Získání dat aktuálního uživatele
+      const currentUser = await getCurrentUser();
 
-      const result = await getCurrentUser();
-      setUser(result);
-      setIsLogged(true);
+      // Uložení do globálního kontextu
+      setUser({
+        id: currentUser.$id,
+        email: currentUser.email,
+        username: currentUser.name || '',
+        firstname: currentUser.firstname || '',
+        lastname: currentUser.lastname || '',
+        role: 'musician', // nebo podle logiky
+      });
 
-      console.log("User signed in successfully");
+      console.log("✅ User signed in successfully");
 
-      <Redirect href="/homes"/>;
-      
+      // Přesměrování
+      router.push('/home');
     } catch (error) {
-      console.log("error sign-in:49")
-      console.log(error.message)
-      Alert.alert("Error", error.message);
+      console.error("❌ Sign-in error:", error);
+      Alert.alert("Error", error.message || 'Unknown error');
     } finally {
-      setSubmitting(false);
+      setIsSubmitting(false);
     }
   };
-
 
   return (
     <SafeAreaView className="bg-primary h-full">
@@ -66,30 +65,35 @@ const SignIn = () => {
         >
           <BackArrow width={30} height={30}/>
         </TouchableOpacity>
-        <Text className="text-3xl text-[#3CFFDF] text-roboto font-medium text-center mt-[10vh]">Musicom</Text>
+
+        <Text className="text-3xl text-[#3CFFDF] text-roboto font-medium text-center mt-[10vh]">
+          Musicom
+        </Text>
+
         <View className="w-full justify-center min-h-[60vh] px-8 my-6">
           <FormField
             title="Email or username"
             value={form.email}
-            handleChangeText={(e) => setForm({ ...form, email: e})}
+            handleChangeText={(e) => setForm({ ...form, email: e })}
             otherStyles="mt-7"
-            keybordType="email-address"
+            keyboardType="email-address"
             placeholder="name@example.com"
           />
+
           <FormField
             title="Password"
             value={form.password}
-            handleChangeText={(e) => setForm({ ...form, password: e})}
+            handleChangeText={(e) => setForm({ ...form, password: e })}
             otherStyles="mt-7"
             placeholder="●●●●●●●●"
             secureTextEntry={!showPassword}
-            isPasswordVisible={showPassword} // Stav viditelnosti hesla
-            toggleVisibility={() => setShowPassword(!showPassword)} // Přepnutí viditelnosti hesla
+            isPasswordVisible={showPassword}
+            toggleVisibility={() => setShowPassword(!showPassword)}
           />
 
           <CustomButton
             title="Sign in"
-            handlePress={() => submit()}
+            handlePress={submit}
             containerStyles="mt-10"
             isLoading={isSubmitting}
           />
@@ -102,7 +106,7 @@ const SignIn = () => {
         </View>
       </ScrollView>
     </SafeAreaView>
-  )
-}
+  );
+};
 
-export default SignIn
+export default SignIn;

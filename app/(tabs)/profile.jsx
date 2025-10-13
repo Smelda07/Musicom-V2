@@ -11,8 +11,6 @@ import LocalityIcon from '../../assets/icons/tabs-icons/profile/Locality.svg'
 import AgeIcon from '../../assets/icons/tabs-icons/profile/Age.svg'
 import GenreIcon from '../../assets/icons/tabs-icons/profile/OtherInstrument.svg'
 
-import { getUserProfile } from '../../lib/appwrite'
-
 const Profile = () => {
   const [backgroundImage, setBackgroundImage] = useState(null);
   const [profileImage, setProfileImage] = useState(null);

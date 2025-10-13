@@ -1,48 +1,27 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, { createContext, useState, useContext } from "react";
 
-import { getCurrentUser } from "../lib/appwrite";
+const GlobalContext = createContext(null);
 
-const GlobalContext = createContext();
-export const useGlobalContext = () => useContext(GlobalContext);
+export default function GlobalProvider({ children }) {
+  const [user, setUser] = useState({
+    id: "test-user",
+    role: "musician",
+    email: "test@musicom.dev",
+  });
 
-const GlobalProvider = ({ children }) => {
-  const [isLogged, setIsLogged] = useState(false);
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    getCurrentUser()
-      .then((res) => {
-        if (res) {
+  const isLogged = !!user;
 
-          setIsLogged(true);
-          setUser(res);
-        } else {
-          setIsLogged(false);
-          setUser(null);
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  }, []);
+  const loginAs = (userData) => {
+    setUser(userData);
+  };
 
   return (
-    <GlobalContext.Provider
-      value={{
-        isLogged,
-        setIsLogged,
-        user,
-        setUser,
-        loading,
-      }}
-    >
+    <GlobalContext.Provider value={{ user, setUser, loginAs, loading, setLoading, isLogged }}>
       {children}
     </GlobalContext.Provider>
   );
-};
+}
 
-export default GlobalProvider;
+export const useGlobalContext = () => useContext(GlobalContext);
