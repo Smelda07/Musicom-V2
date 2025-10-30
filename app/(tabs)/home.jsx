@@ -1,44 +1,47 @@
-import { StyleSheet, Text, View, ScrollView } from 'react-native'
-import React from 'react'
-import CustomButton from '@/components/CustomButton'
-import { signOut } from "../../lib/appwrite.js"
-import { Redirect, router } from 'expo-router'
-import { Alert } from 'react-native';
-
-import { SafeAreaView } from 'react-native-safe-area-context'
-
-import { useGlobalContext } from "../../context/GlobalProvider";
+import { StyleSheet, Text, View, ScrollView } from 'react-native';
+import React from 'react';
+import CustomButton from '@/components/CustomButton';
+import { signOut } from "../../lib/appwrite.js";
+import { router } from 'expo-router';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { useGlobalContext } from "../../context/GlobalProvider.js";
 
 const Home = () => {
+  const { user, setUser } = useGlobalContext();
 
-  const { user, setUser, setIsLogged } = useGlobalContext();
+  const signOutSubmit = async () => {
+  try {
+    if (user?.id !== "test-user") {
+      await signOut();
+    }
 
-  const signOutSubmit = () => {
-    setUser(null)
-    setIsLogged(false)
-    signOut()
-    router.push("/sign-in")
-  }
+      setUser(null);
+      router.push("/");
+    } catch (error) {
+      console.error("❌ Sign-out error:", error);
+    }
+  };
 
 
   return (
-    <SafeAreaView className="bg-secondary h-full"> {/*bg-primary?*/}
+    <SafeAreaView className="bg-secondary h-full">
       <ScrollView>
-        <View>
+        <View className="p-5">
           <CustomButton
-              title="Odhlásit se"
-              handlePress={() => signOutSubmit()}
-              containerStyles="mt-10"
-            />
-          <Text>
-            {user?.username}
+            title="Odhlásit se"
+            handlePress={signOutSubmit}
+            containerStyles="mt-10"
+          />
+
+          <Text className="mt-5 text-white text-lg">
+            Přihlášený uživatel: {user?.username || "Guest"}
           </Text>
         </View>
       </ScrollView>
     </SafeAreaView>
-  )
-}
+  );
+};
 
-export default Home
+export default Home;
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({});

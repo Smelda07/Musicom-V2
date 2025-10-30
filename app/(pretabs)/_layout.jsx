@@ -5,10 +5,10 @@ import BackArrow from '../../assets/icons/auth-icons/BackArrow.svg';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import NextPageButton from '../../components/NextPageButton';
 import NextPageArrow from '../../assets/icons/pretabs-icons/NextPageArrow';
-import { useSurveyStore } from "../../context/useSurveyStore"; // Import store
+import { useSurveyStore } from "../../context/useSurveyStore";
 import { updateUserProfile } from '../../lib/appwrite';
 import { Platform } from 'react-native';
-import { StyleSheet } from 'nativewind';
+import { StyleSheet} from 'react-native';
 
 const Wrapper = Platform.OS === 'web' ? View : SafeAreaView;
 
@@ -82,28 +82,20 @@ const OnBoardingLayout = ({ children, totalSteps = 6 }) => {
   };
 
   const submitSurvey = () => {
-    console.log("Submitting survey..."); // Tady zavoláš Appwrite API
-    console.log(chosenInstruments)
-    updateUserProfile({
-      
-    })
-    router.push(1);
-    /*submitToAppwrite*/
+  console.log("Submitting survey (skipping DB for now)...");
+  console.log("Chosen instruments:", chosenInstruments);
+  console.log("Chosen genres:", chosenGenres);
+  console.log("Locality:", locality);
+  console.log("Gender:", chosenGender);
+  console.log("Birth year:", birthYear);
+
+  router.push('/home');
   };
 
-  const styles = StyleSheet.create({
-    outer: {
-      flex: 1,
-    },
-    inner: {
-      flex: 1
-    }
-  });
-  
 
   return (
-    <SafeAreaView style={styles.outer}>
-        <View className="bg-primary h-full px-7" style={styles.inner}>
+    <SafeAreaView>
+        <View className="bg-primary h-full px-7">
           {/* Header */}
           <View>
             <TouchableOpacity
@@ -175,8 +167,6 @@ const OnBoardingLayout = ({ children, totalSteps = 6 }) => {
               />
             )}
           </View>
-
-          <StatusBar backgroundColor="#060606"/>
         </View>
     </SafeAreaView>
   );

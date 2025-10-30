@@ -7,8 +7,11 @@ import CustomButton from '../../components/CustomButton';
 import BackArrow from '../../assets/icons/auth-icons/BackArrow.svg';
 
 import { createUser, signIn } from '../../lib/appwrite';
+import { useGlobalContext } from '../../context/GlobalProvider';
 
 const SignUp = () => {
+  const { setUser } = useGlobalContext();
+
   const [form, setForm] = useState({
     firstname: '',
     lastname: '',
@@ -19,48 +22,29 @@ const SignUp = () => {
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
-
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-
-  const [errors, setErrors] = useState({
-    firstname: '',
-    lastname: '',
-    username: '',
-    email: '',
-    password: '',
-    confirmPassword: '',
-  });
+  const [errors, setErrors] = useState({});
 
   const validateForm = () => {
+    const newErrors = {};
     let isValid = true;
-    const newErrors = {
-      firstname: '',
-      lastname: '',
-      username: '',
-      email: '',
-      password: '',
-      confirmPassword: '',
-    };
 
     if (!form.firstname.trim()) {
       newErrors.firstname = 'First name is required';
       isValid = false;
     }
-
     if (!form.lastname.trim()) {
       newErrors.lastname = 'Last name is required';
       isValid = false;
     }
-
     if (!form.username.trim()) {
       newErrors.username = 'Username is required';
       isValid = false;
     } else if (form.username.trim().length < 3) {
-      newErrors.username = 'At least 3 characters are required.';
+      newErrors.username = 'At least 3 characters are required';
       isValid = false;
     }
-
     if (!form.email.trim()) {
       newErrors.email = 'Email is required';
       isValid = false;
@@ -68,7 +52,6 @@ const SignUp = () => {
       newErrors.email = 'Invalid email address';
       isValid = false;
     }
-
     if (!form.password) {
       newErrors.password = 'Password is required';
       isValid = false;
@@ -76,7 +59,6 @@ const SignUp = () => {
       newErrors.password = 'At least 8 characters are required.';
       isValid = false;
     }
-
     if (!form.confirmPassword) {
       newErrors.confirmPassword = 'Confirm password is required';
       isValid = false;
@@ -90,33 +72,44 @@ const SignUp = () => {
   };
 
   const submit = async () => {
-    if (validateForm()) {
-      setIsSubmitting(true);
-      console.log('Form submitted', form);
-      console.log(form.email, form.username)
-      createUser(form.email, form.password, form.username);
-      signIn(form.email, form.password)
-      
-      try {
-        const newUser = await createUser(
-          form.email,
-          form.password,
-          form.username,
-          form.firstname,
-          form.lastname
-        );
+    if (!validateForm()) return;
 
-        console.log('✅ User successfully created:', newUser);
+    setIsSubmitting(true);
 
-        router.push('/onBoarding_instruments');
-      } catch (error) {
-        console.error('❌ Registration error:', error);
-        Alert.alert('Registration error', error.message || 'Unknown error');
-      } finally {
-        setIsSubmitting(false);
-      }
-    } else {
-      console.log('❌ Form validation failed:', errors);
+    try {
+      // 1️⃣ Vytvoření uživatele
+      const newUser = await createUser(
+        form.email,
+        form.password,
+        form.username,
+        form.firstname,
+        form.lastname
+      );
+
+      console.log('✅ User successfully created:', newUser);
+
+      // 2️⃣ Přihlášení uživatele
+      const loggedInUser = await signIn(form.email, form.password);
+
+      console.log('✅ User successfully signed in:', loggedInUser);
+
+      // 3️⃣ Uložení do globálního kontextu
+      setUser({
+        id: loggedInUser.$id,
+        email: loggedInUser.email,
+        username: loggedInUser.name || form.username,
+        firstname: form.firstname,
+        lastname: form.lastname,
+        role: 'musician', // nebo podle logiky
+      });
+
+      // 4️⃣ Přesměrování
+      router.push('/onBoarding_instruments');
+    } catch (error) {
+      console.error('❌ Registration error:', error);
+      Alert.alert('Registration error', error.message || 'Unknown error');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
