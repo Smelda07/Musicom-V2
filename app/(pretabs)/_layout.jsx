@@ -8,7 +8,7 @@ import NextPageArrow from '../../assets/icons/pretabs-icons/NextPageArrow';
 import { useSurveyStore } from "../../context/useSurveyStore";
 import { updateUserProfile } from '../../lib/appwrite';
 import { Platform } from 'react-native';
-import { StyleSheet } from 'nativewind';
+import { StyleSheet} from 'react-native';
 
 const Wrapper = Platform.OS === 'web' ? View : SafeAreaView;
 
@@ -93,19 +93,9 @@ const OnBoardingLayout = ({ children, totalSteps = 6 }) => {
   };
 
 
-  const styles = StyleSheet.create({
-    outer: {
-      flex: 1,
-    },
-    inner: {
-      flex: 1
-    }
-  });
-  
-
   return (
-    <SafeAreaView style={styles.outer}>
-        <View className="bg-primary h-full px-7" style={styles.inner}>
+    <SafeAreaView>
+        <View className="bg-primary h-full px-7">
           {/* Header */}
           <View>
             <TouchableOpacity
@@ -177,8 +167,6 @@ const OnBoardingLayout = ({ children, totalSteps = 6 }) => {
               />
             )}
           </View>
-
-          <StatusBar backgroundColor="#060606"/>
         </View>
     </SafeAreaView>
   );

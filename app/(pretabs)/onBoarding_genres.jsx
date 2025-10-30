@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, TextInput, Pressable, Keyboard, Alert } from 'react-native';
 import { genres_list } from "../../constants/genres.js";
-import { useSurveyStore } from "../../context/useSurveyStore"; // Použití globálního stavu
+import { useSurveyStore } from "../../context/useSurveyStore.js"; // Použití globálního stavu
 
 const MAX_SELECTION = 3; // Maximální počet vybraných žánrů
 

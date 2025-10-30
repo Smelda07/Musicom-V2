@@ -4,7 +4,7 @@ import CustomButton from '@/components/CustomButton';
 import { signOut } from "../../lib/appwrite.js";
 import { router } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useGlobalContext } from "../../context/GlobalProvider";
+import { useGlobalContext } from "../../context/GlobalProvider.js";
 
 const Home = () => {
   const { user, setUser } = useGlobalContext();

@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, TextInput, Pressable, Keyboard, Alert } from 'react-native';
 import { getAllInstruments, getCommonInstruments } from "../../constants/instruments.js";
-import { useSurveyStore } from "../../context/useSurveyStore";
+import { useSurveyStore } from "../../context/useSurveyStore.js";
 
 const MAX_SELECTION = 3; // Maximální počet vybraných nástrojů
 

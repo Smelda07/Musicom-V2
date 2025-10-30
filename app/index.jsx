@@ -1,5 +1,4 @@
 import { ScrollView, Text, View, ImageBackground, TouchableOpacity } from 'react-native';
-import { StatusBar } from 'expo-status-bar';
 import { router } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Musicom from '../assets/images/auth/letter-M-2.svg';
@@ -69,7 +68,7 @@ export default function App() {
             </Text>
           </TouchableOpacity>
 
-          {/* ✅ Testovací tlačítko pro rychlé přihlášení */}
+          {/* Testovací tlačítko pro rychlé přihlášení */}
           <TouchableOpacity
             activeOpacity={0.5}
             onPress={loginAsTestUser}
@@ -85,8 +84,6 @@ export default function App() {
           </TouchableOpacity>
         </View>
       </ScrollView>
-
-      <StatusBar backgroundColor='#060606' style='light'/>
     </SafeAreaView>
   );
 }
