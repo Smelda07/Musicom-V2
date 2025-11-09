@@ -26,7 +26,6 @@ const AuthLayout = () => {
           }}
         />
       </Stack>
-
     </>
   )
 }

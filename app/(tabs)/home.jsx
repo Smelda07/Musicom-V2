@@ -30,7 +30,7 @@ const Home = () => {
           <CustomButton
             title="Odhlásit se"
             handlePress={signOutSubmit}
-            containerStyles="mt-10"
+            containerStyles="mt-4"
           />
 
           <Text className="mt-5 text-white text-lg">

@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react'
 import * as ImagePicker from 'expo-image-picker'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { Share, TextInput } from 'react-native'
+import instruments from '../../constants/instruments';
 
 import Facebook from '../../assets/icons/auth-icons/facebook.svg'
 import EditIcon from '../../assets/icons/tabs-icons/edit.svg'
@@ -17,6 +18,11 @@ const Profile = () => {
   const [bio, setBio] = useState('');
   const [isEditingBio, setIsEditingBio] = useState(false);
   const [profile, setProfile] = useState(null);
+
+  const [instruments, setInstruments] = useState([]);
+  const [genres, setGenres] = useState([]);
+  const [location, setLocation] = useState('');
+  const [age, setAge] = useState('');
 
   useEffect(() => {
     const fetchProfile = async () => {

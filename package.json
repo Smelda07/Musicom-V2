@@ -44,6 +44,7 @@
     "express": "^4.21.2",
     "framer-motion": "^11.11.9",
     "gluestack-ui": "^0.7.16",
+    "lucide-react-native": "^0.553.0",
     "metro-react-native-babel-transformer": "^0.77.0",
     "nativewind": "^4.0.1",
     "node-fetch": "^3.3.2",

@@ -1,20 +1,20 @@
 import { create } from 'zustand';
 
 export const useSurveyStore = create((set) => ({
-  chosenInstruments: [],
+  // ROLE UŽIVATELE
+  role: null,
+  setRole: (role) => set({ role }),
+
+  // DATA PRO VŠECHNY ROLE
   chosenGenres: [],
-  chosenGender: null,
-  birthYear: "",
   locality: { country: "", state: "", city: "" },
 
+  // MUZIKANT
+  chosenInstruments: [],
+  chosenGender: null,
+  birthYear: "",
+
   setChosenInstruments: (instruments) => set({ chosenInstruments: instruments }),
-  setChosenGenres: (genres) => set({ chosenGenres: genres }),
-  setGender: (gender) => set({ chosenGender: gender }),
-  setBirthYear: (year) => set({ birthYear: year }),
-
-  setLocality: (countryKey, countryLabel, stateKey, stateLabel, cityKey, cityLabel) =>
-    set({ locality: { country: { key: countryKey, label: countryLabel }, state: { key: stateKey, label: stateLabel }, city: { key: cityKey, label: cityLabel } } }),
-
   toggleInstrument: (instrument) =>
     set((state) => ({
       chosenInstruments: state.chosenInstruments.includes(instrument)
@@ -22,6 +22,24 @@ export const useSurveyStore = create((set) => ({
         : [...state.chosenInstruments, instrument],
     })),
 
+  setGender: (gender) => set({ chosenGender: gender }),
+  setBirthYear: (year) => set({ birthYear: year }),
+
+  // ORGANIZÁTOR
+  organizationNames: [""],
+  chosenEvents: [],
+
+  setOrganizationNames: (names) => set({ organizationNames: names }),
+
+  toggleEvent: (event) =>
+    set((state) => ({
+      chosenEvents: state.chosenEvents.includes(event)
+        ? state.chosenEvents.filter((item) => item !== event)
+        : [...state.chosenEvents, event],
+    })),
+
+  // FAN / USER
+  setChosenGenres: (genres) => set({ chosenGenres: genres }),
   toggleGenre: (genre) =>
     set((state) => ({
       chosenGenres: state.chosenGenres.includes(genre)
@@ -29,12 +47,26 @@ export const useSurveyStore = create((set) => ({
         : [...state.chosenGenres, genre],
     })),
 
+  // LOKALITA
+  setLocality: (countryKey, countryLabel, stateKey, stateLabel, cityKey, cityLabel) =>
+    set({
+      locality: {
+        country: { key: countryKey, label: countryLabel },
+        state: { key: stateKey, label: stateLabel },
+        city: { key: cityKey, label: cityLabel },
+      },
+    }),
+
+  // RESET VŠEHO
   resetSurvey: () =>
     set({
+      role: null,
       chosenInstruments: [],
       chosenGenres: [],
       chosenGender: null,
       birthYear: "",
+      organizationNames: [],
+      chosenEvents: [],
       locality: { country: "", state: "", city: "" },
     }),
 }));
