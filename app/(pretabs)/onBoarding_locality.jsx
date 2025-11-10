@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { View, Text, ScrollView } from "react-native";
-import { Picker } from "@react-native-picker/picker";
+import { View, Text } from "react-native";
+import DropDownPicker from "react-native-dropdown-picker";
 import { useSurveyStore } from "../../context/useSurveyStore";
 
 const API_BASE = "https://api.turyna.eu/api/musicom";
@@ -16,115 +16,230 @@ const OnBoardingLocality = () => {
   const [selectedState, setSelectedState] = useState(locality.state?.key || null);
   const [selectedCity, setSelectedCity] = useState(locality.city?.key || null);
 
-  // Načtení seznamu zemí
+  const [openCountry, setOpenCountry] = useState(false);
+  const [openState, setOpenState] = useState(false);
+  const [openCity, setOpenCity] = useState(false);
+
   useEffect(() => {
     const fetchCountries = async () => {
       try {
-        const response = await fetch(`${API_BASE}/countries`);
-        const data = await response.json();
-        setCountries(data.content.countries || []);
-      } catch (error) {
-        console.error("Error fetching countries:", error);
+        const res = await fetch(`${API_BASE}/countries`);
+        const data = await res.json();
+        const list = Object.entries(data.content.countries || {}).map(([key, label]) => ({
+          label,
+          value: key,
+        }));
+        setCountries(list);
+      } catch (e) {
+        console.log("Error loading countries", e);
       }
     };
     fetchCountries();
   }, []);
 
-  // Načtení seznamu států při změně země
   useEffect(() => {
-    if (!selectedCountry) return;
+    if (!selectedCountry) {
+      setStates([]);
+      return;
+    }
     const fetchStates = async () => {
       try {
-        const data = await fetch(`${API_BASE}/countries/${selectedCountry}`).then(res => res.json());
-        setStates(data.content.states || []);
-      } catch (error) {
-        console.error("Error fetching states:", error);
+        const res = await fetch(`${API_BASE}/countries/${selectedCountry}`);
+        const data = await res.json();
+        const list = Object.entries(data.content.states || {}).map(([key, label]) => ({
+          label,
+          value: key,
+        }));
+        setStates(list);
+      } catch (e) {
+        console.log("Error loading states", e);
       }
     };
     fetchStates();
   }, [selectedCountry]);
 
-  // Načtení seznamu měst při změně státu
   useEffect(() => {
-    if (!selectedCountry || !selectedState) return;
+    if (!selectedCountry || !selectedState) {
+      setCities([]);
+      return;
+    }
     const fetchCities = async () => {
       try {
-        const data = await fetch(`${API_BASE}/countries/${selectedCountry}/${selectedState}`).then(res => res.json());
-        setCities(data.content.cities || []);
-      } catch (error) {
-        console.error("Error fetching cities:", error);
+        const res = await fetch(`${API_BASE}/countries/${selectedCountry}/${selectedState}`);
+        const data = await res.json();
+        const list = Object.entries(data.content.cities || {}).map(([key, label]) => ({
+          label,
+          value: key,
+        }));
+        setCities(list);
+      } catch (e) {
+        console.log("Error loading cities", e);
       }
     };
     fetchCities();
   }, [selectedState]);
 
-  // Změna země → reset státu a města
-  const handleCountryChange = (value) => {
-    setSelectedCountry(value);
-    setSelectedState(null);
-    setSelectedCity(null);
-
-    const countryLabel = countries[value] || "";
-    setLocality(value, countryLabel, "", "", "", "");
+  /** --- společné styly --- **/
+  const pickerBaseStyle = {
+    backgroundColor: "#222222ff",
+    borderColor: "#565555ff",
+    borderWidth: 1,
+    borderRadius: 8,
   };
 
-  // Změna státu → reset města
-  const handleStateChange = (value) => {
-    setSelectedState(value);
-    setSelectedCity(null);
-
-    const stateLabel = states[value] || "";
-    setLocality(selectedCountry, countries[selectedCountry], value, stateLabel, "", "");
-  };
-
-  // Změna města
-  const handleCityChange = (value) => {
-    setSelectedCity(value);
-
-    const cityLabel = cities[value] || "";
-    setLocality(selectedCountry, countries[selectedCountry], selectedState, states[selectedState], value, cityLabel);
+  const pickerModalCommon = {
+    modalContentContainerStyle: { backgroundColor: "#1C1C1E" },
+    modalTitleStyle: { color: "#fff" },
+    searchContainerStyle: {
+      borderBottomColor: "#565656ff",
+      borderBottomWidth: 1,
+    },
+    searchTextInputContainerStyle: {
+      borderColor: "#A1A1AA",
+      borderWidth: 1,
+      borderRadius: 10,
+      backgroundColor: "#2C2C2E",
+      marginBottom: 14,
+    },
+    searchTextInputStyle: {
+      color: "#fff",
+      backgroundColor: "#2C2C2E",
+      height: 36,
+      borderColor: "#5d5d5dff",
+      borderWidth: 1.2,
+      borderRadius: 8,
+      paddingHorizontal: 12,
+    },
+    listItemContainerStyle: {
+      backgroundColor: "#1C1C1E",
+      borderBottomColor: "#3A3A3C",
+      borderBottomWidth: 1,
+    },
+    listItemLabelStyle: { color: "#fff" },
+    dividerStyle: { backgroundColor: "#3A3A3C" },
+    closeIconStyle: { tintColor: "#A1A1AA" },
   };
 
   return (
-    <ScrollView className="bg-primary">
-      <View className="mx-4">
-        <Text className="text-lg text-white mt-6">Select location</Text>
+    <View className="flex-1 bg-primary p-4">
+      <Text className="text-white text-lg mt-2 mb-4 font-medium">Select location</Text>
 
-        {/* Výběr země */}
-        <View className="mt-4 bg-white rounded-md">
-          <Picker selectedValue={selectedCountry} onValueChange={handleCountryChange}>
-            <Picker.Item label="Select a country" value="" />
-            {Object.entries(countries).map(([key, label]) => (
-              <Picker.Item key={key} label={label} value={key} />
-            ))}
-          </Picker>
-        </View>
-
-        {/* Výběr státu */}
-        {selectedCountry && (
-          <View className="mt-4 bg-white rounded-md">
-            <Picker selectedValue={selectedState} onValueChange={handleStateChange}>
-              <Picker.Item label="Select a state" value="" />
-              {Object.entries(states).map(([key, label]) => (
-                <Picker.Item key={key} label={label} value={key} />
-              ))}
-            </Picker>
-          </View>
-        )}
-
-        {/* Výběr města */}
-        {selectedState && (
-          <View className="mt-4 bg-white rounded-md">
-            <Picker selectedValue={selectedCity} onValueChange={handleCityChange}>
-              <Picker.Item label="Select a city" value="" />
-              {Object.entries(cities).map(([key, label]) => (
-                <Picker.Item key={key} label={label} value={key} />
-              ))}
-            </Picker>
-          </View>
-        )}
+      {/* COUNTRY */}
+      <View className="mb-3 z-[3000]">
+        <DropDownPicker
+          open={openCountry}
+          value={selectedCountry}
+          items={countries}
+          setOpen={(val) => {
+            setOpenCountry(val);
+            if (val) {
+              setOpenState(false);
+              setOpenCity(false);
+            }
+          }}
+          setValue={(callback) => {
+            const val = typeof callback === "function" ? callback() : callback;
+            setSelectedCountry(val || null);
+            setSelectedState(null);
+            setSelectedCity(null);
+            const label = countries.find((c) => c.value === val)?.label || "";
+            setLocality(val || "", label, "", "", "", "");
+          }}
+          placeholder="Select a country"
+          searchable={true}
+          listMode="MODAL"
+          modalTitle="Select country"
+          modalProps={{ animationType: "slide" }}
+          style={pickerBaseStyle}
+          dropDownContainerStyle={pickerBaseStyle}
+          placeholderStyle={{ color: "#A0A0A0" }}
+          textStyle={{ color: "#fff" }}
+          
+          {...pickerModalCommon}
+        />
       </View>
-    </ScrollView>
+
+      {/* STATE */}
+      {selectedCountry && (
+        <View className="mb-3 z-[2000]">
+          <DropDownPicker
+            open={openState}
+            value={selectedState}
+            items={states}
+            setOpen={(val) => {
+              setOpenState(val);
+              if (val) {
+                setOpenCountry(false);
+                setOpenCity(false);
+              }
+            }}
+            setValue={(callback) => {
+              const val = typeof callback === "function" ? callback() : callback;
+              setSelectedState(val || null);
+              setSelectedCity(null);
+              const label = states.find((s) => s.value === val)?.label || "";
+              setLocality(
+                selectedCountry || "",
+                countries.find((c) => c.value === selectedCountry)?.label || "",
+                val || "",
+                label,
+                "",
+                ""
+              );
+            }}
+            placeholder="Select a state"
+            searchable={true}
+            listMode="MODAL"
+            modalTitle="Select state"
+            style={pickerBaseStyle}
+            dropDownContainerStyle={pickerBaseStyle}
+            placeholderStyle={{ color: "#A0A0A0" }}
+            textStyle={{ color: "#fff" }}
+            {...pickerModalCommon}
+          />
+        </View>
+      )}
+
+      {/* CITY */}
+      {selectedState && (
+        <View className="mb-3 z-[1000]">
+          <DropDownPicker
+            open={openCity}
+            value={selectedCity}
+            items={cities}
+            setOpen={(val) => {
+              setOpenCity(val);
+              if (val) {
+                setOpenCountry(false);
+                setOpenState(false);
+              }
+            }}
+            setValue={(callback) => {
+              const val = typeof callback === "function" ? callback() : callback;
+              setSelectedCity(val || null);
+              const label = cities.find((c) => c.value === val)?.label || "";
+              setLocality(
+                selectedCountry || "",
+                countries.find((c) => c.value === selectedCountry)?.label || "",
+                selectedState || "",
+                states.find((s) => s.value === selectedState)?.label || "",
+                val || "",
+                label
+              );
+            }}
+            placeholder="Select a city"
+            searchable={true}
+            listMode="MODAL"
+            modalTitle="Select city"
+            style={pickerBaseStyle}
+            dropDownContainerStyle={pickerBaseStyle}
+            placeholderStyle={{ color: "#A0A0A0" }}
+            textStyle={{ color: "#fff" }}
+            {...pickerModalCommon}
+          />
+        </View>
+      )}
+    </View>
   );
 };
 
