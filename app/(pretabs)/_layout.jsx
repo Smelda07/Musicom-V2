@@ -132,7 +132,7 @@ const OnBoardingLayout = ({ children }) => {
     <SafeAreaView className="bg-primary h-full px-7">
 
       {/* Header */}
-      <TouchableOpacity onPress={() => router.push('/sign-in')} className="pt-8">
+      <TouchableOpacity onPress={() => router.push('/selection')} className="pt-8">
         <BackArrow width={30} height={30} />
       </TouchableOpacity>
 
