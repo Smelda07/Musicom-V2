@@ -19,7 +19,7 @@ const OnBoardingInstruments = () => {
   // Filtrování nástrojů podle hledaného textu
   const filteredInstruments = Object.values(getAllInstruments()) // Převede objekt na pole hodnot
   .filter(instrument => instrument.toLowerCase().startsWith(searchText.toLowerCase())) // Filtrování podle názvu
-  .filter(instrument => !chosenInstruments.includes(instrument)) // Nezobrazovat již vybrané nástroje
+  .filter(instrument => !chosenInstruments.includes(instrument)) // Nezobrazuje již vybrané nástroje
   .sort((a, b) => a.localeCompare(b)); // Seřazení podle názvu
 
 
@@ -121,7 +121,7 @@ const OnBoardingInstruments = () => {
               <TouchableOpacity 
                 key={index} 
                 className="bg-[#004D40] rounded-full px-4 py-2 flex-row items-center"
-                onPress={() => toggleInstrument(instrument)} // Kliknutím na celou buňku se smaže
+                onPress={() => toggleInstrument(instrument)}
               >
                 <Text className="text-white font-semibold text-center text-base mr-2">
                   {instrument}
