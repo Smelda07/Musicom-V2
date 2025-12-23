@@ -14,6 +14,7 @@ export const genres_list = [
     "Stoner Rock",
   
     // Metal a jeho podžánry
+    "Metal",
     "Heavy Metal",
     "Thrash Metal",
     "Death Metal",

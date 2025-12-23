@@ -3,7 +3,7 @@ import { View, Text, ScrollView, TouchableOpacity, TextInput, Pressable, Keyboar
 import { getAllInstruments, getCommonInstruments } from "../../constants/instruments.js";
 import { useSurveyStore } from "../../context/useSurveyStore.js";
 
-const MAX_SELECTION = 3; // Maximální počet vybraných nástrojů
+const MAX_SELECTION = 2; // Maximální počet vybraných nástrojů
 
 const OnBoardingInstruments = () => {
   const [searchText, setSearchText] = useState('');

@@ -2,7 +2,7 @@ import { useState } from "react";
 import { View, Text, TextInput, TouchableOpacity, Keyboard, FlatList, Alert } from "react-native";
 import { getAllInstruments } from "../../../constants/instruments";
 
-export default function InstrumentSelector({ selectedInstruments, onChange, maxSelection = 5 }) {
+export default function InstrumentSelector({ selectedInstruments, onChange, maxSelection = 2 }) {
   const [searchText, setSearchText] = useState('');
   const [showDropdown, setShowDropdown] = useState(false);
 
@@ -56,7 +56,7 @@ export default function InstrumentSelector({ selectedInstruments, onChange, maxS
             left: 0,
             width: '100%',
             maxHeight: 200,
-            backgroundColor: '#1c2d27ff',
+            backgroundColor: '#252525ff',
             borderRadius: 6,
             zIndex: 9999,
             elevation: 9999,

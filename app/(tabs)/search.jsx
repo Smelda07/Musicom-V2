@@ -5,7 +5,6 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import SearchBar from "../../components/SearchComponents/SearchBar"
 import FiltersPanel from "../../components/SearchComponents/FilterPanel"
 import FilterChips from "../../components/SearchComponents/FilterChips"
-import RecentSearches from "../../components/SearchComponents/RecentSearches"
 import ProfileCard from "../../components/SearchComponents/ProfileCard"
 
 import { mockProfiles } from "../../constants/mockProfiles"
@@ -18,7 +17,7 @@ export default function SearchScreen() {
     instruments: [],
     genres: [],
     location: "",
-    ageRange: [18, 60],
+    ageRange: [],
     gender: "any",
   })
 

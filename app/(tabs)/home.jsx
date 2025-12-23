@@ -1,7 +1,6 @@
 import { StyleSheet, Text, View, ScrollView } from 'react-native';
 import React from 'react';
 import CustomButton from '@/components/CustomButton';
-import { signOut } from "../../lib/appwrite.js";
 import { router } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useGlobalContext } from "../../context/GlobalProvider.js";

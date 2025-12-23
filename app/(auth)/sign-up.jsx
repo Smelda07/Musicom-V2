@@ -6,7 +6,6 @@ import FormField from '../../components/FormField';
 import CustomButton from '../../components/CustomButton';
 import BackArrow from '../../assets/icons/auth-icons/BackArrow.svg';
 
-import { createUser, signIn } from '../../lib/appwrite';
 import { useGlobalContext } from '../../context/GlobalProvider';
 
 const SignUp = () => {

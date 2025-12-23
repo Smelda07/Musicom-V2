@@ -5,7 +5,6 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import FormField from '../../components/FormField';
 import CustomButton from '../../components/CustomButton';
 import BackArrow from '../../assets/icons/auth-icons/BackArrow.svg';
-import { signIn, getCurrentUser } from '@/lib/appwrite';
 import { useGlobalContext } from "../../context/GlobalProvider";
 
 const SignIn = () => {
