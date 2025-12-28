@@ -4,6 +4,9 @@ import * as ImagePicker from 'expo-image-picker'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { Share, TextInput } from 'react-native'
 import instruments from '../../constants/instruments';
+import { useGlobalContext } from "../../context/GlobalProvider.js";
+import CustomButton from '../../components/CustomButton'
+import { router } from 'expo-router'
 
 import Facebook from '../../assets/icons/auth-icons/facebook.svg'
 import EditIcon from '../../assets/icons/tabs-icons/edit.svg'
@@ -94,6 +97,17 @@ const Profile = () => {
 
     if (!result.canceled && result.assets.length > 0) {
       setProfileImage(result.assets[0].uri);
+    }
+  };
+
+  const { user, setUser } = useGlobalContext();
+
+  const signOutSubmit = async () => {
+    try {
+      setUser(null);
+      router.push("/");
+    } catch (error) {
+      console.error("❌ Sign-out error:", error);
     }
   };
 
@@ -229,7 +243,7 @@ const Profile = () => {
 
           {/* Genres */}
           <Text className="text-center font-regular text-xl text-white mt-6">Music genres</Text>
-          <View className="justify-center items-center bg-[#171717] w-full rounded-3xl h-16 mt-3 mb-24">
+          <View className="justify-center items-center bg-[#171717] w-full rounded-3xl h-16 mt-3 mb-8">
             <View className="absolute left-6 top-1/2 -translate-y-1/2">
               <GenreIcon width={24} height={24} />
             </View>
@@ -237,6 +251,14 @@ const Profile = () => {
               <EditIcon width={18} height={18} />
             </View>
             <Text className="text-[#D4D4D4] text-lg font-regular">{genres.join(', ')}</Text>
+          </View>
+
+          <View className="">
+            <CustomButton
+              title="Sign Out"
+              handlePress={signOutSubmit}
+              containerStyles="mt-4"
+            />
           </View>
         </View>
       </ScrollView>

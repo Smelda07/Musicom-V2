@@ -3,7 +3,7 @@ import { MagnifyingGlassIcon, AdjustmentsHorizontalIcon } from "react-native-her
 
 export default function SearchBar({ value, onChange, onFilterPress }) {
   return (
-    <View className="flex-row items-center bg-neutral-900 rounded-2xl px-4 py-3">
+    <View className="flex-row items-center bg-neutral-900 rounded-2xl px-4 py-2">
       <MagnifyingGlassIcon size={20} color="#c8cfdbff"/>
 
       <TextInput
@@ -15,7 +15,7 @@ export default function SearchBar({ value, onChange, onFilterPress }) {
       />
 
       <TouchableOpacity onPress={onFilterPress}>
-        <AdjustmentsHorizontalIcon size={20} color="#10B981" />
+        <AdjustmentsHorizontalIcon size={20} color="#00ffaaff" />
       </TouchableOpacity>
     </View>
   )

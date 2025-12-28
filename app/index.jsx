@@ -76,7 +76,7 @@ export default function App() {
               marginTop: 20,
               paddingVertical: 10,
               paddingHorizontal: 20,
-              backgroundColor: '#3CFFDF',
+              backgroundColor: '#00FFB7',
               borderRadius: 8
             }}
           >

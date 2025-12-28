@@ -78,7 +78,7 @@ export default function SearchScreen() {
   }, [query, filters])
 
   return (
-    <SafeAreaView className="bg-secondary h-full">
+    <SafeAreaView className="bg-primary h-full">
       <View className="flex-1 px-4">
         <SearchBar
           value={query}

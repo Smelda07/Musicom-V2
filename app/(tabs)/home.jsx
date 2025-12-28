@@ -1,46 +1,44 @@
-import { StyleSheet, Text, View, ScrollView } from 'react-native';
-import React from 'react';
-import CustomButton from '@/components/CustomButton';
-import { router } from 'expo-router';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { useGlobalContext } from "../../context/GlobalProvider.js";
+import { View } from "react-native";
+import { useState } from "react";
+
+import Header from "../../components/HomeScreenComponents/Header";
+import FilterPills from "../../components/HomeScreenComponents/FilterPills";
+import Search from "../../components/HomeScreenComponents/Search";
+import Feed from "../../components/HomeScreenComponents/Feed";
 
 const Home = () => {
-  const { user, setUser } = useGlobalContext();
+  const [activeFilter, setActiveFilter] = useState("all");
+  const [search, setSearch] = useState("");
 
-  const signOutSubmit = async () => {
-  try {
-    if (user?.id !== "test-user") {
-      await signOut();
-    }
-
-      setUser(null);
-      router.push("/");
-    } catch (error) {
-      console.error("❌ Sign-out error:", error);
-    }
-  };
-
+  const FILTERS = [
+  { id: "all", label: "All" },
+  { id: "events", label: "Events" },
+  { id: "bands", label: "Bands" },
+  { id: "musicians", label: "Musicians" },
+  { id: "promotracks", label: "Promo Tracks" },
+  { id: "gear", label: "Gear" },
+  ];
 
   return (
-    <SafeAreaView className="bg-secondary h-full">
-      <ScrollView>
-        <View className="p-5">
-          <CustomButton
-            title="Odhlásit se"
-            handlePress={signOutSubmit}
-            containerStyles="mt-4"
-          />
+    <View className="flex-1 bg-primary">
+      <Header />
 
-          <Text className="mt-5 text-white text-lg">
-            Přihlášený uživatel: {user?.username || "Guest"}
-          </Text>
-        </View>
-      </ScrollView>
-    </SafeAreaView>
+      <FilterPills
+        filters={FILTERS}
+        active={activeFilter}
+        onChange={setActiveFilter}
+      />
+
+      <Search
+        value={search}
+        onChange={setSearch}
+      />
+
+      <Feed
+        filter={activeFilter}
+      />
+    </View>
   );
 };
 
 export default Home;
-
-const styles = StyleSheet.create({});

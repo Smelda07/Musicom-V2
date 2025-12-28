@@ -23,7 +23,7 @@ export default function ProfileCard({ profile, query }) {
         <HighlightText
           text={profile.instrument}
           query={query}
-          className="text-emerald-500 text-sm"
+          className="text-[#00ffaaff] text-sm"
         />
 
         {/* Genres */}
