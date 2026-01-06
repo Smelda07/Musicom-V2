@@ -1,10 +1,11 @@
-import { View } from "react-native";
+import { View, ScrollView } from "react-native";
 import { useState } from "react";
 
 import Header from "../../components/HomeScreenComponents/Header";
 import FilterPills from "../../components/HomeScreenComponents/FilterPills";
 import Search from "../../components/HomeScreenComponents/Search";
-import Feed from "../../components/HomeScreenComponents/Feed";
+
+import HomeFeedPreview from "../../components/HomeScreenComponents/HomeFeedPreview";
 
 const Home = () => {
   const [activeFilter, setActiveFilter] = useState("all");
@@ -34,9 +35,10 @@ const Home = () => {
         onChange={setSearch}
       />
 
-      <Feed
-        filter={activeFilter}
-      />
+      <ScrollView>
+        <HomeFeedPreview />
+      </ScrollView>
+
     </View>
   );
 };

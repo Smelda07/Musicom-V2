@@ -1,54 +1,55 @@
-import { Text, View, ScrollView, TouchableOpacity, Alert } from 'react-native';
-import React, { useState } from 'react';
-import { router } from 'expo-router';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import FormField from '../../components/FormField';
-import CustomButton from '../../components/CustomButton';
-import BackArrow from '../../assets/icons/auth-icons/BackArrow.svg';
+import { Text, View, ScrollView, TouchableOpacity, Alert } from "react-native";
+import React, { useState } from "react";
+import { router } from "expo-router";
+import { SafeAreaView } from "react-native-safe-area-context";
+
+import FormField from "../../components/FormField";
+import CustomButton from "../../components/CustomButton";
+import BackArrow from "../../assets/icons/auth-icons/BackArrow.svg";
+
 import { useGlobalContext } from "../../context/GlobalProvider";
+import { signIn } from "../../api/auth";
 
 const SignIn = () => {
   const { setUser } = useGlobalContext();
-
-  const [form, setForm] = useState({
-    email: '',
-    password: '',
-  });
-
+  const [form, setForm] = useState({ email: "", password: "" });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
   const submit = async () => {
     if (!form.email || !form.password) {
-      return Alert.alert("Error", "Please fill in all fields");
+      Alert.alert("Error", "Please fill in all fields");
+      return;
     }
 
     setIsSubmitting(true);
-
     try {
-      // Přihlášení uživatele
-      await signIn(form.email, form.password);
+      const data = await signIn(form.email, form.password);
+      const user = data.user;
 
-      // Získání dat aktuálního uživatele
-      const currentUser = await getCurrentUser();
-
-      // Uložení do globálního kontextu
       setUser({
-        id: currentUser.$id,
-        email: currentUser.email,
-        username: currentUser.name || '',
-        firstname: currentUser.firstname || '',
-        lastname: currentUser.lastname || '',
-        role: 'musician', // nebo podle logiky
+        id: user.id,
+        emailVerified: user.emailVerified,
+        needsQuestionnaire: user.needsQuestionnaire,
+        role: user.role || "user",
+        username: user.username || "",
+        firstname: user.firstName || "",
+        lastname: user.lastName || "",
       });
 
-      console.log("✅ User signed in successfully");
-
-      // Přesměrování
-      router.push('/home');
+      // Redirect podle stavu účtu
+      if (!user.emailVerified) {
+        router.replace("/verify-email");
+        return;
+      }
+      if (user.needsQuestionnaire) {
+        router.replace("/questionnaire");
+        return;
+      }
+      router.replace("/home");
     } catch (error) {
       console.error("❌ Sign-in error:", error);
-      Alert.alert("Error", error.message || 'Unknown error');
+      Alert.alert("Error", error.message || "Sign in failed");
     } finally {
       setIsSubmitting(false);
     }
@@ -57,12 +58,12 @@ const SignIn = () => {
   return (
     <SafeAreaView className="bg-primary h-full">
       <ScrollView>
-        <TouchableOpacity 
-          className="pt-8 pl-7" 
-          activeOpacity={0.5} 
-          onPress={() => router.push('/')}
+        <TouchableOpacity
+          className="pt-8 pl-7"
+          activeOpacity={0.5}
+          onPress={() => router.push("/")}
         >
-          <BackArrow width={30} height={30}/>
+          <BackArrow width={30} height={30} />
         </TouchableOpacity>
 
         <Text className="text-3xl text-[#3CFFDF] text-roboto font-medium text-center mt-[10vh]">
@@ -96,12 +97,6 @@ const SignIn = () => {
             containerStyles="mt-10"
             isLoading={isSubmitting}
           />
-
-          <View className="justify-center pt-5 flex-row gap-2">
-            <Text className="text-lg text-[#979797] font-regular">
-              Forgot your Password?
-            </Text>
-          </View>
         </View>
       </ScrollView>
     </SafeAreaView>

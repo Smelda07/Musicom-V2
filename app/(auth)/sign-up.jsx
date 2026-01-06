@@ -1,23 +1,26 @@
-import { Text, View, ScrollView, TouchableOpacity, Alert } from 'react-native';
-import React, { useState } from 'react';
-import { router } from 'expo-router';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import FormField from '../../components/FormField';
-import CustomButton from '../../components/CustomButton';
-import BackArrow from '../../assets/icons/auth-icons/BackArrow.svg';
+import { Text, View, ScrollView, TouchableOpacity, Alert } from "react-native";
+import React, { useState } from "react";
+import { router } from "expo-router";
+import { SafeAreaView } from "react-native-safe-area-context";
 
-import { useGlobalContext } from '../../context/GlobalProvider';
+import FormField from "../../components/FormField";
+import CustomButton from "../../components/CustomButton";
+import BackArrow from "../../assets/icons/auth-icons/BackArrow.svg";
+
+import { useGlobalContext } from "../../context/GlobalProvider";
+import { createUser } from "../../api/users";
+import { signIn } from "../../api/auth";
 
 const SignUp = () => {
   const { setUser } = useGlobalContext();
 
   const [form, setForm] = useState({
-    firstname: '',
-    lastname: '',
-    username: '',
-    email: '',
-    password: '',
-    confirmPassword: '',
+    firstname: "",
+    lastname: "",
+    username: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -30,39 +33,39 @@ const SignUp = () => {
     let isValid = true;
 
     if (!form.firstname.trim()) {
-      newErrors.firstname = 'First name is required';
+      newErrors.firstname = "First name is required";
       isValid = false;
     }
     if (!form.lastname.trim()) {
-      newErrors.lastname = 'Last name is required';
+      newErrors.lastname = "Last name is required";
       isValid = false;
     }
     if (!form.username.trim()) {
-      newErrors.username = 'Username is required';
+      newErrors.username = "Username is required";
       isValid = false;
     } else if (form.username.trim().length < 3) {
-      newErrors.username = 'At least 3 characters are required';
+      newErrors.username = "At least 3 characters are required";
       isValid = false;
     }
     if (!form.email.trim()) {
-      newErrors.email = 'Email is required';
+      newErrors.email = "Email is required";
       isValid = false;
     } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(form.email)) {
-      newErrors.email = 'Invalid email address';
+      newErrors.email = "Invalid email address";
       isValid = false;
     }
     if (!form.password) {
-      newErrors.password = 'Password is required';
+      newErrors.password = "Password is required";
       isValid = false;
     } else if (form.password.length < 8) {
-      newErrors.password = 'At least 8 characters are required.';
+      newErrors.password = "At least 8 characters are required.";
       isValid = false;
     }
     if (!form.confirmPassword) {
-      newErrors.confirmPassword = 'Confirm password is required';
+      newErrors.confirmPassword = "Confirm password is required";
       isValid = false;
     } else if (form.password !== form.confirmPassword) {
-      newErrors.confirmPassword = 'Passwords do not match';
+      newErrors.confirmPassword = "Passwords do not match";
       isValid = false;
     }
 
@@ -76,37 +79,45 @@ const SignUp = () => {
     setIsSubmitting(true);
 
     try {
-      // 1️⃣ Vytvoření uživatele
-      const newUser = await createUser(
-        form.email,
-        form.password,
-        form.username,
-        form.firstname,
-        form.lastname
-      );
+      // 1️⃣ Registrace
+      await createUser({
+        username: form.username,
+        email: form.email,
+        firstName: form.firstname,
+        lastName: form.lastname,
+        password: form.password,
+      });
+      console.log("✅ User successfully created");
 
-      console.log('✅ User successfully created:', newUser);
+      // 2️⃣ Přihlášení
+      const data = await signIn(form.email, form.password);
+      const user = data.user;
 
-      // 2️⃣ Přihlášení uživatele
-      const loggedInUser = await signIn(form.email, form.password);
-
-      console.log('✅ User successfully signed in:', loggedInUser);
-
-      // 3️⃣ Uložení do globálního kontextu
+      // 3️⃣ Globální context
       setUser({
-        id: loggedInUser.$id,
-        email: loggedInUser.email,
-        username: loggedInUser.name || form.username,
+        id: user.id,
+        emailVerified: user.emailVerified,
+        needsQuestionnaire: user.needsQuestionnaire,
+        role: user.role || "user",
+        username: form.username,
         firstname: form.firstname,
         lastname: form.lastname,
-        role: 'musician', // nebo podle logiky
       });
 
-      // 4️⃣ Přesměrování
-      router.push('/onBoarding_instruments');
+      // 4️⃣ Redirect
+      // if (!user.emailVerified) {
+      //  router.replace("/verify-email");
+      //  return;
+      // }
+      if (user.needsQuestionnaire) {
+        router.replace("/onBoarding_instruments");
+        return;
+      }
+
     } catch (error) {
-      console.error('❌ Registration error:', error);
-      Alert.alert('Registration error', error.message || 'Unknown error');
+      console.error("❌ Registration error:", error);
+      console.error("Error massage:", error.message);
+      Alert.alert("Registration error", error.message || "Unknown error");
     } finally {
       setIsSubmitting(false);
     }
@@ -118,7 +129,7 @@ const SignUp = () => {
         <TouchableOpacity
           className="pt-8 pl-7"
           activeOpacity={0.5}
-          onPress={() => router.push('/')}
+          onPress={() => router.push("/")}
         >
           <BackArrow width={30} height={30} />
         </TouchableOpacity>
@@ -188,7 +199,9 @@ const SignUp = () => {
             placeholder="●●●●●●●●"
             secureTextEntry={!showConfirmPassword}
             isPasswordVisible={showConfirmPassword}
-            toggleVisibility={() => setShowConfirmPassword(!showConfirmPassword)}
+            toggleVisibility={() =>
+              setShowConfirmPassword(!showConfirmPassword)
+            }
             error={errors.confirmPassword}
           />
 
@@ -201,11 +214,11 @@ const SignUp = () => {
 
           <View className="justify-center pt-5 flex-row gap-2">
             <Text className="text-[#979797] text-lg font-medium">
-              Already have an account?{' '}
+              Already have an account?{" "}
             </Text>
             <TouchableOpacity
               activeOpacity={0.5}
-              onPress={() => router.push('/sign-in')}
+              onPress={() => router.push("/sign-in")}
             >
               <Text className="text-[#3CFFDF] text-lg font-semibold">
                 Sign in
