@@ -30,12 +30,12 @@ export default function HomeFeedPreview() {
           🗓 12. dubna • 19:00
         </Text>
 
-        <View className="flex-row justify-between mt-3">
+        <View className="flex-row gap-3 mt-3">
           <TouchableOpacity className="rounded-full bg-neutral-800 px-4 py-2">
             <Text className="text-white">Zajímá mě</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity className="rounded-full bg-[#ffaf00] px-4 py-2">
+          <TouchableOpacity className="rounded-full bg-[#ffffff] px-4 py-2">
             <Text className="text-black font-semibold">Jdu</Text>
           </TouchableOpacity>
         </View>
@@ -83,7 +83,7 @@ export default function HomeFeedPreview() {
             <Text className="text-white">Profil</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity className="rounded-full bg-yellow-400 px-4 py-2">
+          <TouchableOpacity className="rounded-full bg-white px-4 py-2">
             <Text className="text-black font-semibold">Kontaktovat</Text>
           </TouchableOpacity>
         </View>

@@ -14,8 +14,6 @@ const OnBoardingInstruments = () => {
 
   const commonInstruments = getCommonInstruments(true);
 
-  console.log(getAllInstruments())
-
   // Filtrování nástrojů podle hledaného textu
   const filteredInstruments = Object.values(getAllInstruments()) // Převede objekt na pole hodnot
   .filter(instrument => instrument.toLowerCase().startsWith(searchText.toLowerCase())) // Filtrování podle názvu

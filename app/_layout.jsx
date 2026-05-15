@@ -41,6 +41,13 @@ export default function RootLayout() {
           {/* Hlavní taby */}
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
 
+          {/* Podstránky */}
+          <Stack.Screen name="(subpages)/add/BandPage" options={{ headerShown: false }} />
+          <Stack.Screen name="(subpages)/add/EventPage" options={{ headerShown: false }} />
+          <Stack.Screen name="(subpages)/add/GearPage" options={{ headerShown: false }} />
+           <Stack.Screen name="(subpages)/add/MusicianPage" options={{ headerShown: false }} />
+          <Stack.Screen name="(subpages)/add/TrackPage" options={{ headerShown: false }} />
+
           {/* Not found page */}
           <Stack.Screen name="+not-found" />
         </Stack>

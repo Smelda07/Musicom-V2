@@ -15,7 +15,6 @@ const Home = () => {
   { id: "all", label: "All" },
   { id: "events", label: "Events" },
   { id: "bands", label: "Bands" },
-  { id: "musicians", label: "Musicians" },
   { id: "promotracks", label: "Promo Tracks" },
   { id: "gear", label: "Gear" },
   ];

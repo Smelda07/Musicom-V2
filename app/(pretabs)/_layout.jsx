@@ -75,7 +75,7 @@ const OnBoardingLayout = ({ children }) => {
       switch (currentStep) {
         case 1: return chosenInstruments.length > 0;
         case 2: return chosenGenres.length > 0;
-        case 3: return locality.country && locality.state && locality.city;
+    //  case 3: return locality.country && locality.state && locality.city;
         case 4: return chosenGender;
         case 5:
           let actualDate = new Date();

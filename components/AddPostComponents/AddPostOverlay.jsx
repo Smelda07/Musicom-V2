@@ -8,6 +8,7 @@ import {
 } from "react-native"
 import { useEffect, useRef } from "react"
 import { Ionicons } from "@expo/vector-icons"
+import { router } from 'expo-router';
 
 const { height } = Dimensions.get("window")
 
@@ -25,6 +26,12 @@ export default function AddPostOverlay({ open, onClose, onSelect }) {
   if (!open) return null
 
   const handleSelect = (type) => {
+    if (type === "event") {
+      router.push("(subpages)/add/EventPage")
+    }
+    if (type === "band") {
+      router.push("(subpages)/add/BandPage")
+    }
     onClose()
     onSelect?.(type)
   }
