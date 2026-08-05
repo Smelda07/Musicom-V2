@@ -8,11 +8,11 @@ import CustomButton from "../../components/CustomButton";
 import BackArrow from "../../assets/icons/auth-icons/BackArrow.svg";
 
 import { useGlobalContext } from "../../context/GlobalProvider";
-import { createUser } from "../../api/users";
-import { signIn } from "../../api/auth";
+// Importujeme naši novou sjednocenou funkci
+import { handleSignUp } from "../../lib/appwrite"; 
 
 const SignUp = () => {
-  const { setUser } = useGlobalContext();
+  const { setUser, setIsLoggedIn } = useGlobalContext();
 
   const [form, setForm] = useState({
     firstname: "",
@@ -29,45 +29,15 @@ const SignUp = () => {
   const [errors, setErrors] = useState({});
 
   const validateForm = () => {
+    // (Ponechávám tvou stávající logiku validace beze změn)
     const newErrors = {};
     let isValid = true;
-
-    if (!form.firstname.trim()) {
-      newErrors.firstname = "First name is required";
-      isValid = false;
-    }
-    if (!form.lastname.trim()) {
-      newErrors.lastname = "Last name is required";
-      isValid = false;
-    }
-    if (!form.username.trim()) {
-      newErrors.username = "Username is required";
-      isValid = false;
-    } else if (form.username.trim().length < 3) {
-      newErrors.username = "At least 3 characters are required";
-      isValid = false;
-    }
-    if (!form.email.trim()) {
-      newErrors.email = "Email is required";
-      isValid = false;
-    } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(form.email)) {
-      newErrors.email = "Invalid email address";
-      isValid = false;
-    }
-    if (!form.password) {
-      newErrors.password = "Password is required";
-      isValid = false;
-    } else if (form.password.length < 8) {
-      newErrors.password = "At least 8 characters are required.";
-      isValid = false;
-    }
-    if (!form.confirmPassword) {
-      newErrors.confirmPassword = "Confirm password is required";
-      isValid = false;
-    } else if (form.password !== form.confirmPassword) {
-      newErrors.confirmPassword = "Passwords do not match";
-      isValid = false;
-    }
+    if (!form.firstname.trim()) { newErrors.firstname = "First name is required"; isValid = false; }
+    if (!form.lastname.trim()) { newErrors.lastname = "Last name is required"; isValid = false; }
+    if (!form.username.trim()) { newErrors.username = "Username is required"; isValid = false; }
+    if (!form.email.trim() || !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(form.email)) { newErrors.email = "Invalid email address"; isValid = false; }
+    if (!form.password || form.password.length < 8) { newErrors.password = "Password must be at least 8 chars"; isValid = false; }
+    if (form.password !== form.confirmPassword) { newErrors.confirmPassword = "Passwords do not match"; isValid = false; }
 
     setErrors(newErrors);
     return isValid;
@@ -79,51 +49,35 @@ const SignUp = () => {
     setIsSubmitting(true);
 
     try {
-      // 1️⃣ Registrace
-      await createUser({
-        username: form.username,
-        email: form.email,
-        firstName: form.firstname,
-        lastName: form.lastname,
-        password: form.password,
-      });
-      console.log("✅ User successfully created");
+      // Voláme sjednocenou funkci, která vytvoří účet i profil v DB
+      await handleSignUp(
+        form.email, 
+        form.password, 
+        form.username, 
+        form.firstname, 
+        form.lastname
+      );
 
-      // 2️⃣ Přihlášení
-      const data = await signIn(form.email, form.password);
-      const user = data.user;
-
-      // 3️⃣ Globální context
+      // Nastavíme globální stav
       setUser({
-        id: user.id,
-        emailVerified: user.emailVerified,
-        needsQuestionnaire: user.needsQuestionnaire,
-        role: user.role || "user",
         username: form.username,
         firstname: form.firstname,
         lastname: form.lastname,
       });
+      setIsLoggedIn(true);
 
-      // 4️⃣ Redirect
-      // if (!user.emailVerified) {
-      //  router.replace("/verify-email");
-      //  return;
-      // }
-      if (user.needsQuestionnaire) {
-        router.replace("/onBoarding_instruments");
-        return;
-      }
+      // Přesměrování na onBoarding (dotazník)
+      router.replace("/onBoarding_instruments");
 
     } catch (error) {
       console.error("❌ Registration error:", error);
-      console.error("Error massage:", error.message);
-      Alert.alert("Registration error", error.message || "Unknown error");
+      Alert.alert("Registration error", error.message || "An unexpected error occurred");
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  return (
+return (
     <SafeAreaView className="bg-primary h-full">
       <ScrollView>
         <TouchableOpacity

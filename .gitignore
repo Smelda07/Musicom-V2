@@ -8,6 +8,8 @@ npm-debug.*
 *.key
 *.mobileprovision
 *.orig.*
+npm-debug.log
+.env.local
 web-build/
 .yarn/
 
