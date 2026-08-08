@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "Musicom",
-    "newArchEnabled": false,
+    "newArchEnabled": false, 
     "slug": "musicom",
     "version": "1.0.0",
     "orientation": "portrait",
