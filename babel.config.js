@@ -6,12 +6,14 @@ module.exports = function (api) {
       "nativewind/babel",
     ],
     plugins: [
-      ["module-resolver", {
-        root: ["./"],
-        alias: { "@": "./" }
-      }],
-
-      require.resolve("react-native-reanimated/plugin"),
+      [
+        "module-resolver",
+        {
+          root: ["./"],
+          alias: { "@": "./" },
+        },
+      ],
+      "react-native-reanimated/plugin",
     ],
   };
 };
