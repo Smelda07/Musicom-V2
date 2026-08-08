@@ -12,8 +12,8 @@ module.exports = function (api) {
           root: ["./"],
           alias: {
             "@": "./",
-            // Klíčový přepis: přesměruje chybějící worklets plugin na reanimated plugin
-            "react-native-worklets/plugin": "react-native-reanimated/plugin",
+            // Přesměruje vyžadovaný plugin na správný instalovaný modul:
+            "react-native-worklets/plugin": "react-native-worklets-core/plugin",
           },
         },
       ],
