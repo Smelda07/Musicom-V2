@@ -6,17 +6,6 @@ module.exports = function (api) {
       "nativewind/babel",
     ],
     plugins: [
-      [
-        "module-resolver",
-        {
-          root: ["./"],
-          alias: {
-            "@": "./",
-            // Přesměruje vyžadovaný plugin na správný instalovaný modul:
-            "react-native-worklets/plugin": "react-native-worklets-core/plugin",
-          },
-        },
-      ],
       "react-native-reanimated/plugin",
     ],
   };
