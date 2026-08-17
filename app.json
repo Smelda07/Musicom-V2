@@ -1,22 +1,22 @@
 {
   "expo": {
     "name": "Musicom",
-    "newArchEnabled": false, 
     "slug": "musicom",
     "version": "1.0.0",
     "orientation": "portrait",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
+    "owner": "bobosm07s-team",
+    "newArchEnabled": false,
+    "backgroundColor": "#000000",
+    "androidStatusBar": {
+      "backgroundColor": "#000000"
+    },
     "splash": {
       "image": "./assets/images/logo.png",
       "resizeMode": "contain",
       "backgroundColor": "#000000"
-    }
     },
-    "androidStatusBar": {
-      "backgroundColor": "#000000"
-    },
-    "backgroundColor": "#000000",
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.robin.musicom"
@@ -48,6 +48,6 @@
       "eas": {
         "projectId": "01a834aa-1e42-4bce-878b-221f872b9c95"
       }
-    },
-    "owner": "bobosm07s-team"
+    }
   }
+}
