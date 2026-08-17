@@ -8,8 +8,10 @@
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "splash": {
+      "image": "./assets/images/logo.png",
       "resizeMode": "contain",
       "backgroundColor": "#000000"
+    }
     },
     "androidStatusBar": {
       "backgroundColor": "#000000"
@@ -49,4 +51,3 @@
     },
     "owner": "bobosm07s-team"
   }
-}
