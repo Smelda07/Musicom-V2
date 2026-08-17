@@ -9,23 +9,29 @@
     "owner": "bobosm07s-team",
     "newArchEnabled": false,
     "backgroundColor": "#000000",
-    "androidStatusBar": {
-      "backgroundColor": "#000000"
+    
+    "icon": "./assets/images/auth/logo.png",
+
+    "android": {
+      "package": "com.robin.musicom",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/images/auth/logo.png",
+        "backgroundColor": "#000000"
+      }
     },
+
     "splash": {
       "image": "./assets/images/auth/logo.png",
       "resizeMode": "contain",
       "backgroundColor": "#000000"
     },
+
+    "androidStatusBar": {
+      "backgroundColor": "#000000"
+    },
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.robin.musicom"
-    },
-    "android": {
-      "package": "com.robin.musicom",
-      "adaptiveIcon": {
-        "backgroundColor": "#000000"
-      }
     },
     "web": {
       "package": "com.robin.musicom",
